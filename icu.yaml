@@ -1,6 +1,6 @@
 package:
   name: icu
-  version: 71.1
+  version: !!float 72-1
   epoch: 0
   description: "International Components for Unicode library"
   target-architecture:
