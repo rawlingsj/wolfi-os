@@ -30,7 +30,7 @@ pipeline:
   - uses: fetch
     with:
       uri: https://libisl.sourceforge.io/isl-${{package.version}}.tar.gz
-      expected-sha256: 26e6e4d60ad59b3fff9948eb36743f0c874e124e410ef5bab930d0f546bc580d
+      expected-sha256: abc123
   - runs: |
       ./configure \
         --host=${{host.triplet.gnu}} \

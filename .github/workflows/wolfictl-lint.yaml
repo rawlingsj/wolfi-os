@@ -14,4 +14,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: wolf
+    - uses: temp-james-test/wolfictl@main
+    - run: wolfi lint
