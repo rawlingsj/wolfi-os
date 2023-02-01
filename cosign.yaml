@@ -21,10 +21,6 @@ environment:
       - go
 
 pipeline:
-  - uses: fetch
-    with:
-      uri: https://github.com/sigstore/cosign/archive/v${{package.version}}/cosign-v${{package.version}}.tar.gz
-      expected-sha256: 496583e9a3e07f16ff18f3734ca69398ef7091336fe74adaf8012715656bb920
   - runs: |
       CGO_ENABLED=0 go build \
         -trimpath -ldflags "-buildid= -X sigs.k8s.io/release-utils/version.gitVersion=${{package.version}}" \
