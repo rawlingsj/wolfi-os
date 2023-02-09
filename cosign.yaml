@@ -25,3 +25,13 @@ pipeline:
       CGO_ENABLED=0 go build \
         -trimpath -ldflags "-buildid= -X sigs.k8s.io/release-utils/version.gitVersion=${{package.version}}" \
         -o "${{targets.destdir}}/usr/bin/cosign" ./cmd/cosign
+
+advisories:
+  CVE246:
+    - timestamp: 2023-02-09T17:54:37.610402255Z
+      status: fixed
+      fixed-version: 2.1.5cg29-r0
+
+secfixes:
+  2.1.5cg29-r0:
+    - CVE246
