@@ -2,7 +2,9 @@ name: Wolfictl Lint
 
 on:
   pull_request:
-    branches: ['main']
+    branches: ['lint_test']
+  push:
+    branches: ['lint_test']
 jobs:
   lint:
     name: Wolfictl Lint
@@ -19,3 +21,9 @@ jobs:
       with:
         entrypoint: wolfictl
         args: lint
+    - name: Advisory sync
+      id: advisory
+      uses: docker://ghcr.io/wolfi-dev/wolfictl:latest
+      with:
+        entrypoint: wolfictl
+        args: advisory sync-secfixes --warn *\.yaml
