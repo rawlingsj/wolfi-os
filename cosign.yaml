@@ -1,7 +1,7 @@
 package:
   name: cosign
-  version: 1.13.1
-  epoch: 1
+  version: 2.1.5cg31
+  epoch: 0
   description: Container Signing
   target-architecture:
     - all
@@ -12,20 +12,17 @@ package:
   dependencies:
     runtime:
       - ca-certificates-bundle
-
 environment:
   contents:
     packages:
       - busybox
       - ca-certificates-bundle
       - go
-
 pipeline:
   - runs: |
       CGO_ENABLED=0 go build \
         -trimpath -ldflags "-buildid= -X sigs.k8s.io/release-utils/version.gitVersion=${{package.version}}" \
         -o "${{targets.destdir}}/usr/bin/cosign" ./cmd/cosign
-
 advisories:
   CVE-2022-27191:
     - timestamp: 2023-03-10T11:50:24.691084Z
@@ -39,7 +36,6 @@ advisories:
     - timestamp: 2023-03-10T11:50:24.692583Z
       status: fixed
       fixed-version: 2.1.5cg31-r0
-
 secfixes:
   2.1.5cg31-r0:
     - CVE-2022-27664
