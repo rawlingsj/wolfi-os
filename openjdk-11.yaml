@@ -1,6 +1,6 @@
 package:
   name: openjdk-11
-  version: 11.0.18
+  version: 11.0.18-ga
   epoch: 1
   description:
   copyright:
@@ -39,7 +39,7 @@ environment:
 pipeline:
   - uses: fetch
     with:
-      uri: https://github.com/openjdk/jdk11u/archive/refs/tags/jdk-${{package.version}}-ga.tar.gz
+      uri: https://github.com/openjdk/jdk11u/archive/refs/tags/jdk-${{package.version}}.tar.gz
       expected-sha256: c0560c3480e7ded2a59d783ddf2cb624a44ece9d3036f4a7a7575d597b18fb2e
 
   - runs: chmod +x configure

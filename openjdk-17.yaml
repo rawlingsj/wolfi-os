@@ -1,6 +1,6 @@
 package:
   name: openjdk-17
-  version: 17.0.6
+  version: 17.0.6-ga
   epoch: 1
   description:
   copyright:
@@ -39,7 +39,7 @@ environment:
 pipeline:
   - uses: fetch
     with:
-      uri: https://github.com/openjdk/jdk17u/archive/refs/tags/jdk-${{package.version}}-ga.tar.gz
+      uri: https://github.com/openjdk/jdk17u/archive/refs/tags/jdk-${{package.version}}.tar.gz
       expected-sha256: f1d1c29ff5ac8254dc81d1635d60f658b6f2b790476acab836ddcb488c8c7fbe
 
   - uses: fetch
