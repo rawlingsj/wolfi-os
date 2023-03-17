@@ -1,0 +1,26 @@
+package:
+  name: bar
+  version: 2.3.4
+  epoch: 0
+  description: bar test
+  target-architecture:
+    - all
+  copyright:
+    - license: Apache-2.0
+      paths:
+        - "*"
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub  
+    packages:
+      - bash
+      - busybox
+
+pipeline:
+  - runs: |
+      mkdir -p  ${{targets.destdir}}/usr
+      echo bar > ${{targets.destdir}}/usr/bar

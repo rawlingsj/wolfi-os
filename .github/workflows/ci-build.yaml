@@ -1,17 +1,17 @@
 name: CI build action
 
 on:
-  pull_request:
-    branches: ['main']
+  push:
+    branches: ['foo']
 
 jobs:
   build:
     name: Build changed OS packages (CI)
-    runs-on: ubuntu-16-core
+    runs-on: ubuntu-latest
 
-    permissions:
-      packages: write
-      contents: read
+    # permissions:
+    #   packages: write
+    #   contents: read
 
     steps:
       - name: Generate snapshot date
@@ -25,7 +25,7 @@ jobs:
 
       - uses: chainguard-dev/actions/setup-melange@main
 
-      - uses: google-github-actions/setup-gcloud@v0
+      # - uses: google-github-actions/setup-gcloud@v0
 
       - name: 'Generate local signing key'
         run: |
@@ -34,18 +34,27 @@ jobs:
       - name: 'Sync public package repository'
         run: |
           mkdir "${{ github.workspace }}/packages"
-          gsutil -m rsync -r gs://wolfi-production-registry-destination/os/ "${{ github.workspace }}/packages/"
-          find "${{ github.workspace }}/packages" -print -exec touch \{} \;
+          # gsutil -m rsync -r gs://wolfi-production-registry-destination/os/ "${{ github.workspace }}/packages/"
+          # find "${{ github.workspace }}/packages" -print -exec touch \{} \;
 
       - name: 'Build Wolfi'
         run: |
           make --debug MELANGE="sudo melange" MELANGE_DIR=/usr/share/melange MELANGE_EXTRA_OPTS="--keyring-append ${{ github.workspace }}/wolfi-signing.rsa.pub" REPO="${{ github.workspace }}/packages" -j1
 
-      - uses: actions/setup-go@v3
-      - name: 'Generate dependency svg'
-        run: |
-          git clone https://github.com/wolfi-dev/wolfictl && cd wolfictl && go install && cd -
-          wolfictl svg
+      - name: Check sonames
+        id: soname
+        uses: docker://ghcr.io/wolfi-dev/wolfictl:latest
+        with:
+          entrypoint: wolfictl
+          args: check so-name
+
+      - name: Check svg
+        id: svg
+        uses: docker://ghcr.io/wolfi-dev/wolfictl:latest
+        with:
+          entrypoint: wolfictl
+          args: svg
+
       - uses: actions/upload-artifact@v3
         with:
           name: dag.svg
