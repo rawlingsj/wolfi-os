@@ -1,6 +1,6 @@
 package:
   name: rabbitmq-server
-  version: 3.11.11
+  version: 2.11.11
   epoch: 0
   description: Open source RabbitMQ. core server and tier 1 (built-in) plugins
   copyright:

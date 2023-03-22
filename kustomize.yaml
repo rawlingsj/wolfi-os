@@ -1,6 +1,6 @@
 package:
   name: kustomize
-  version: 5.0.1
+  version: 4.0.1
   epoch: 0
   description: Customization of kubernetes YAML configurations
   copyright:

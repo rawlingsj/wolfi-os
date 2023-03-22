@@ -1,7 +1,7 @@
 package:
   name: helm
   # When you bump this you can remove the CVE mitigations
-  version: 3.11.2
+  version: 2.11.2
   epoch: 0
   description: The Kubernetes Package Manager
   copyright:
