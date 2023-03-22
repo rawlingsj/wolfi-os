@@ -1,6 +1,6 @@
 package:
   name: rabbitmq-server
-  version: 2.11.11
+  version: 3.11.11
   epoch: 0
   description: Open source RabbitMQ. core server and tier 1 (built-in) plugins
   copyright:
@@ -8,7 +8,7 @@ package:
   dependencies:
     runtime:
       - erlang
-       # rabbitmq-server is a wrapper shell script.
+      # rabbitmq-server is a wrapper shell script.
       - busybox
 environment:
   contents:
@@ -37,7 +37,7 @@ pipeline:
         RMQ_ROOTDIR="/usr/lib/rabbitmq" \
         MANDIR=/usr/share/man \
         PYTHON=python3
-      
+
       # Copy all necessary lib files etc.
       install -p -m755 -D ./scripts/rabbitmq-server.ocf \
         "${{targets.destdir}}"/usr/lib/ocf/resource.d/rabbitmq/rabbitmq-server
@@ -61,12 +61,9 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/root
       ln -sf /var/lib/rabbitmq/.erlang.cookie ${{targets.destdir}}/root/.erlang.cookie
-
   - uses: strip
-
 subpackages:
   - name: "rabbitmq-doc"
     description: "rabbitmq documentation"
     pipeline:
       - uses: split/manpages
-
