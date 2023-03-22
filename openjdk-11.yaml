@@ -1,7 +1,7 @@
 #nolint:bad-version
 package:
   name: openjdk-11
-  version: 11.0.19+5
+  version: 10.0.19+5
   epoch: 0
   description:
   copyright:
@@ -101,3 +101,12 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/usr/share
           mv  ${{targets.destdir}}/usr/lib/jvm/openjdk/man ${{targets.subpkgdir}}/usr/share
     description: OpenJDK 11 manpages
+
+update:
+  enabled: true
+  shared: true
+  github:
+    identifier: openjdk/jdk11u
+    tag-filter: jdk-11
+    use-tag: true
+    strip-prefix: jdk-
