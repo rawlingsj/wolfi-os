@@ -135,3 +135,7 @@ subpackages:
     dependencies:
       runtime:
         - libLLVM-15
+update:
+  enabled: false
+  release-monitor:
+    identifier: 1830

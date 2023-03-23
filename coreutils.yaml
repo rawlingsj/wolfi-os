@@ -75,3 +75,7 @@ advisories:
         Fixed upstream prior to Wolfi packaging.
 
         See https://git.savannah.gnu.org/cgit/coreutils.git/commit/?h=v9.1&id=8cb06d4b44a67f89f24b25e2394365533f6e5968
+update:
+  enabled: true
+  release-monitor:
+    identifier: 343
