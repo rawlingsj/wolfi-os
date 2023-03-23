@@ -1,13 +1,12 @@
 package:
   name: sqlite
-  version: 3.40.1
-  epoch: 3
+  version: 3.41.2
+  epoch: 0
   description: "C library which implements an SQL database engine"
   copyright:
     - license: blessing
   dependencies:
     runtime:
-
 environment:
   contents:
     repositories:
@@ -19,11 +18,9 @@ environment:
       - ca-certificates-bundle
       - build-base
       - readline
-
 secfixes:
   3.40.0-r1:
     - CVE-2022-46908
-
 pipeline:
   - uses: fetch
     with:
@@ -61,7 +58,6 @@ pipeline:
       make -j$(nproc) V=1
   - uses: autoconf/make-install
   - uses: strip
-
 subpackages:
   - name: "sqlite-dev"
     description: "sqlite headers"
@@ -80,7 +76,6 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr
           mv "${{targets.destdir}}"/usr/lib "${{targets.subpkgdir}}"/usr/
-
 advisories:
   CVE-2022-46908:
     - timestamp: 2022-12-14T10:26:25Z
