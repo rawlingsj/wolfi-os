@@ -54,3 +54,7 @@ advisories:
 secfixes:
   2.394-r0:
     - CVE-2023-27898
+update:
+  enabled: true
+  github:
+    identifier: jenkinsci/jenkins

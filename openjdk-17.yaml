@@ -108,3 +108,10 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/usr/share
           mv  ${{targets.destdir}}/usr/lib/jvm/openjdk/man ${{targets.subpkgdir}}/usr/share
     description: OpenJDK 17 manpages
+update:
+  enabled: true
+  shared: true
+  github:
+    identifier: openjdk/jdk17u
+    tag-filter: jdk-17
+    use-tag: true

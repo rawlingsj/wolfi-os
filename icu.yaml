@@ -47,3 +47,7 @@ subpackages:
     dependencies:
       runtime:
         - icu
+update:
+  enabled: true
+  release-monitor:
+    identifier: 16134

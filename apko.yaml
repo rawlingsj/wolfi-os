@@ -18,3 +18,8 @@ pipeline:
   - uses: go/install
     with:
       package: chainguard.dev/apko@v${{package.version}}
+update:
+  enabled: true
+  github:
+    identifier: chainguard-dev/apko
+    strip-prefix: v

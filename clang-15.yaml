@@ -196,3 +196,7 @@ subpackages:
       runtime:
         - libLLVM-15
         - libclang-cpp-15
+update:
+  enabled: true
+  release-monitor:
+    identifier: 11811
