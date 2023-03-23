@@ -1,7 +1,7 @@
 package:
   name: clang-15
-  version: 15.0.6
-  epoch: 1
+  version: 16.0.0
+  epoch: 0
   description: "C language family frontend for LLVM"
   copyright:
     - license: Apache-2.0
@@ -31,16 +31,16 @@ pipeline:
   - uses: fetch
     with:
       uri: https://github.com/llvm/llvm-project/releases/download/llvmorg-${{package.version}}/clang-${{package.version}}.src.tar.xz
-      expected-sha256: 10119ae195f1b4f979fe42e67b781e175b0c0d4e982fd6a2f44c4aa7fc925233
+      expected-sha256: 86d1348c8bb1ef13edecec19a0e68dc0db9b18b78f5de48d52ae7983edb9598f
   - uses: fetch
     with:
       uri: https://github.com/llvm/llvm-project/releases/download/llvmorg-${{package.version}}/clang-tools-extra-${{package.version}}.src.tar.xz
-      expected-sha256: 92b1714294efe13906d3b3f87d3273ea9eb38cb7f3b78631820086f0b0173b25
+      expected-sha256: 430fadf6b4b287686e7043792e4defc4b54a4911d02bda540aa5acf63a0de5fa
       strip-components: 0
   - uses: fetch
     with:
       uri: https://github.com/llvm/llvm-project/releases/download/llvmorg-${{package.version}}/cmake-${{package.version}}.src.tar.xz
-      expected-sha256: 7613aeeaba9b8b12b35224044bc349b5fa45525919625057fa54dc882dcb4c86
+      expected-sha256: 04e62ab7d0168688d9102680adf8eabe7b04275f333fe20eef8ab5a3a8ea9fcc
       strip-components: 0
   - runs: |
       mv cmake-${{package.version}}.src ../cmake
