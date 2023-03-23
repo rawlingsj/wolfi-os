@@ -1,7 +1,7 @@
 #nolint:bad-version
 package:
   name: openjdk-11
-  version: 10.0.19+5
+  version: 11.0.19+6
   epoch: 0
   description:
   copyright:
@@ -41,8 +41,7 @@ pipeline:
   - uses: fetch
     with:
       uri: https://github.com/openjdk/jdk11u/archive/refs/tags/jdk-${{package.version}}.tar.gz
-      expected-sha256: 83cdfc35fe9de04534e147c83bf983dc5dba8e15e009891df466a743ce119075
-
+      expected-sha256: ff6af2335d7dec937431f9e751148a084653869a322de0c7236811bd83c2c16d
   - runs: chmod +x configure
   - uses: autoconf/configure
     with:
