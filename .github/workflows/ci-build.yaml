@@ -1,8 +1,8 @@
 name: CI build action
 
 on:
-  # pull_request:
-  #   branches: ['main']
+  pull_request:
+    branches: ['ci']
   push:
     branches: ['ci']
 
@@ -101,4 +101,12 @@ jobs:
       run: cat /usr/foo | grep foo
 
     - name: Scan Packages
-      run: grype .
+      run: grype . --file scan.md
+
+    - name: PR comment with scan results
+      uses: thollander/actions-comment-pull-request@v2
+      with:
+        # message: |
+        #     Grype scan results
+        filePath: scan.md
+        reactions: eyes
