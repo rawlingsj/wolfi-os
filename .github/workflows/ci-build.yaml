@@ -2,12 +2,15 @@ name: CI build action
 
 on:
   pull_request:
-    branches: ['main']
+    branches: ['ci']
+  push:
+    branches: ['ci']
 
 jobs:
   build:
     name: Build changed OS packages (CI)
-    runs-on: ubuntu-16-core
+    # runs-on: ubuntu-16-core
+    runs-on: ubuntu-latest
 
     permissions:
       packages: write
@@ -34,21 +37,76 @@ jobs:
       - name: 'Sync public package repository'
         run: |
           mkdir "${{ github.workspace }}/packages"
-          gsutil -m rsync -x "aarch64/.*" -r gs://wolfi-production-registry-destination/os/ "${{ github.workspace }}/packages/"
-          find "${{ github.workspace }}/packages" -print -exec touch \{} \;
+          # gsutil -m rsync -x "aarch64/.*" -r gs://wolfi-production-registry-destination/os/ "${{ github.workspace }}/packages/"
+          # find "${{ github.workspace }}/packages" -print -exec touch \{} \;
 
       - name: 'Build Wolfi'
         run: |
           make --debug MELANGE="sudo melange" MELANGE_DIR=/usr/share/melange MELANGE_EXTRA_OPTS="--keyring-append ${{ github.workspace }}/wolfi-signing.rsa.pub" REPO="${{ github.workspace }}/packages" -j1
 
-      - name: Generate dependency svg
-        id: svg
-        uses: docker://ghcr.io/wolfi-dev/wolfictl:latest
+      - name: Save apk packages
+        uses: actions/upload-artifact@v2
         with:
-          entrypoint: wolfictl
-          args: svg
+          name: packages-artifact
+          path: ${{ github.workspace }}/packages
+          retention-days: 1
 
-      - uses: actions/upload-artifact@v3
+      - name: Save temporary signing public key
+        uses: actions/upload-artifact@v2
         with:
-          name: dag.svg
-          path: dag.svg
+          name: public-key-artifact
+          path: ${{ github.workspace }}/local-melange.rsa.pub
+          retention-days: 1
+      # - name: Generate dependency svg
+      #   id: svg
+      #   uses: docker://ghcr.io/wolfi-dev/wolfictl:latest
+      #   with:
+      #     entrypoint: wolfictl
+      #     args: svg
+
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: dag.svg
+      #     path: dag.svg
+
+  package-test-job:
+    name: Verify Package
+    needs: [build]
+    runs-on: ubuntu-latest
+    container:
+      # image: cgr.dev/chainguard/wolfi-base:latest
+      image: rawlingsj80/wolfi-test:latest
+    steps:
+    - name: Retrieve apks
+      uses: actions/download-artifact@v3
+      with:
+        name: packages-artifact
+        path: /work/packages
+    - name: Retrieve temporary public signing key
+      uses: actions/download-artifact@v3
+      with:
+        name: public-key-artifact
+        path: /work
+
+    - name: Prepare local apk repository
+      run: |
+        cp /work/local-melange.rsa.pub /etc/apk/keys/
+        echo "" >> /etc/apk/repositories
+        echo "/work/packages" >> /etc/apk/repositories
+
+    - name: Add package
+      run: apk add foo
+
+    - name: Test package
+      run: cat /usr/foo | grep foo
+
+    - name: Scan Packages
+      run: grype . --file scan.md
+
+    - name: PR comment with scan results
+      uses: thollander/actions-comment-pull-request@v2
+      with:
+        message: |
+            Grype scan results
+        filePath: scan.md
+        reactions: eyes
