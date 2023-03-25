@@ -1,6 +1,6 @@
 package:
   name: postgresql-12
-  version: "12.14"
+  version: "15.2"
   epoch: 0
   description: A sophisticated object-relational DBMS
   copyright:
@@ -24,7 +24,7 @@ environment:
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: 785610237d382c842d356e347138e58c06ffeae240e6cc0b52ac5ebcc30d043e
+      expected-sha256: 99a2171fc3d6b5b5f56b757a7a3cb85d509a38e4273805def23941ed2b8468c7
       uri: https://ftp.postgresql.org/pub/source/v${{package.version}}/postgresql-${{package.version}}.tar.bz2
   - uses: autoconf/configure
     with:
