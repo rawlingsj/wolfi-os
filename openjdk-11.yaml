@@ -116,3 +116,4 @@ update:
     strip-prefix: jdk-
     tag-filter: jdk-11
     use-tag: true
+    version-separator: +
