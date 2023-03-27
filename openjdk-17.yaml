@@ -1,6 +1,6 @@
 package:
   name: openjdk-17
-  version: 17.0.7.5
+  version: 16.0.7.5
   epoch: 1
   description:
   copyright:
