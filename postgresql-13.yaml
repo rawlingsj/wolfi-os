@@ -1,6 +1,6 @@
 package:
   name: postgresql-13
-  version: "13.10"
+  version: "15.2"
   epoch: 0
   description: A sophisticated object-relational DBMS
   copyright:
@@ -24,7 +24,7 @@ environment:
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: 5bbcf5a56d85c44f3a8b058fb46862ff49cbc91834d07e295d02e6de3c216df2
+      expected-sha256: 99a2171fc3d6b5b5f56b757a7a3cb85d509a38e4273805def23941ed2b8468c7
       uri: https://ftp.postgresql.org/pub/source/v${{package.version}}/postgresql-${{package.version}}.tar.bz2
   - uses: autoconf/configure
     with:
