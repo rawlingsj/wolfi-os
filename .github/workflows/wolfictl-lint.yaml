@@ -10,7 +10,7 @@ jobs:
 
     permissions:
       contents: read
-
+# akjfbaskhjf
     steps:
     - uses: actions/checkout@v3
     - name: Lint
@@ -19,3 +19,4 @@ jobs:
       with:
         entrypoint: wolfictl
         args: lint
+
