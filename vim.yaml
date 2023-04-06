@@ -1,6 +1,6 @@
 package:
   name: vim
-  version: 9.0.1440
+  version: 9.0.1441
   epoch: 0
   description: "Improved vi-style text editor"
   copyright:
@@ -19,7 +19,7 @@ pipeline:
   - uses: fetch
     with:
       uri: https://github.com/vim/vim/archive/v${{package.version}}.tar.gz
-      expected-sha256: ca218ffd666583f1aca657c2673a60c96a487c6e9ea4c276657e233b6cad3200
+      expected-sha256: 5d558db0dc8535cdf8b0a0bcc6bb02df4610efe162f7966855776f0741606c03
   - runs: |
       # vim seems to manually set FORTIFY_SOURCE=1, and setting both breaks the build
       export CFLAGS=${CFLAGS/-Wp,-D_FORTIFY_SOURCE=3/}
