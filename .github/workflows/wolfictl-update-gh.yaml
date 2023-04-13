@@ -1,9 +1,6 @@
 name: Wolfictl Update From GitHub
 
-on:
-  # Triggers the workflow every hour
-  schedule:
-    - cron: "0 * * * *"
+on: workflow_dispatch
 
 permissions:
   contents: write
