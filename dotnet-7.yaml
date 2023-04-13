@@ -1,13 +1,13 @@
 package:
   name: dotnet-7
-  version: 7.0.104
-  epoch: 1
+  version: 7.0.203
+  epoch: 0
   description: ".NET SDK"
   target-architecture:
     - all
   copyright:
     - paths:
-      - "*"
+        - "*"
       attestation: TODO
       license: MIT
   dependencies:
@@ -42,11 +42,13 @@ pipeline:
     with:
       repository: https://github.com/dotnet/installer
       tag: v7.0.104
-      expected-commit: 5c12d17216f411669c0beb40956249ec48bcb818
+      expected-commit: 5b005c19f54dd103ae2cd4d9be6acbea187c5bcd
       destination: /home/build/installer
+
   - working-directory: /home/build/installer
     runs: |
       ./build.sh /p:ArcadeBuildTarball=true /p:TarballDir=/home/build/src
+
   - working-directory: /home/build/src
     pipeline:
       - runs: |
@@ -75,6 +77,7 @@ pipeline:
               tar zxf artifacts/x64/Release/dotnet-sdk-*.tar.gz -C "${{targets.destdir}}"/usr/share/dotnet
       - runs: |
           ln -s /usr/share/dotnet/dotnet "${{targets.destdir}}"/usr/bin/dotnet
+
   - uses: strip
 
 subpackages:
@@ -129,6 +132,7 @@ subpackages:
       runtime:
         - dotnet-7-runtime
         - dotnet-7-targeting-pack
+
 update:
   enabled: true
   github:
