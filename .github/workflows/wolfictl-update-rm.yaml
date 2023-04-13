@@ -16,7 +16,6 @@ env:
 jobs:
   update:
     name: Wolfictl Update
-    if: github.repository == 'wolfi-dev/os'
     runs-on: ubuntu-latest
 
     steps:
