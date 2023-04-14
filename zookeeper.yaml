@@ -1,6 +1,6 @@
 package:
   name: zookeeper
-  version: "3.8.1"
+  version: "3.8.0"
   epoch: 0
   description:
   target-architecture:

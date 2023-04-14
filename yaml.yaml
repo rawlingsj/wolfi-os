@@ -1,7 +1,7 @@
 # Generated from https://git.alpinelinux.org/aports/plain/main/yaml/APKBUILD
 package:
     name: yaml
-    version: 0.2.5
+    version: 0.2.4
     epoch: 0
     description: YAML 1.1 parser and emitter written in C
     copyright:
