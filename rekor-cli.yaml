@@ -1,6 +1,6 @@
 package:
   name: rekor-cli
-  version: 1.0.1
+  version: 1.1.0
   epoch: 0
   description: Rekor command line interface tool
   target-architecture:
