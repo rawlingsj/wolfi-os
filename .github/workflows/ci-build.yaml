@@ -85,6 +85,22 @@ jobs:
           entrypoint: wolfictl
           args: check so-name
 
+      - name: Check diff
+        id: diff
+        if: steps.file_check.outputs.exists == 'true'
+        # uses: docker://ghcr.io/wolfi-dev/wolfictl:latest
+        uses: docker://rawlingsj80/wolfictl:diff
+        with:
+          entrypoint: wolfictl
+          args: check diff
+
+      - name: PR comment diff
+        if: steps.file_check.outputs.exists == 'true'
+        uses: thollander/actions-comment-pull-request@b4c3fa9
+        with:
+          filePath: diff.log
+          reactions: eyes
+
   dag:
     name: Dependency analysis
     runs-on: ubuntu-latest
