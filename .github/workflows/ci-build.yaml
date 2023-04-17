@@ -44,7 +44,7 @@ jobs:
 
   build:
     name: Test building of packages
-    runs-on: ubuntu-16-core
+    runs-on: ubuntu-latest
     needs: changes
     container:
       image: ghcr.io/wolfi-dev/sdk:latest
@@ -91,7 +91,8 @@ jobs:
         if: steps.file_check.outputs.exists == 'true'
         # Let's not fail the whole job if this step fails as it is for improved UX rather than an enforced check
         continue-on-error: true
-        uses: docker://ghcr.io/wolfi-dev/wolfictl:latest
+        # uses: docker://ghcr.io/wolfi-dev/wolfictl:latest
+        uses: docker://rawlingsj80/wolfictl:diff2
         with:
           entrypoint: wolfictl
           args: check diff
