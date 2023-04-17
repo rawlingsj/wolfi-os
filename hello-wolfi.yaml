@@ -34,6 +34,10 @@ pipeline:
 
   - uses: autoconf/make-install
 
+  - runs: |
+      mkdir -p ${{targets.destdir}}/usr
+      echo foo > ${{targets.destdir}}/usr/test
+
   - uses: strip
 
 subpackages:
