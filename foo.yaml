@@ -1,0 +1,40 @@
+package:
+  name: foo
+  version: 1.2.3
+  epoch: 0
+  description: foo test
+  target-architecture:
+    - all
+  copyright:
+    - license: Apache-2.0
+      paths:
+        - "*"
+
+environment:
+  contents:
+    packages:
+      - bash
+      - busybox
+
+pipeline:
+  - runs: |
+      mkdir -p  ${{targets.destdir}}/usr
+      echo a > a
+      echo b > b
+      echo foo > ${{targets.destdir}}/usr/foo
+      echo cheese > ${{targets.destdir}}/usr/cheese
+
+subpackages:
+  - name: bar
+    description: bar
+    pipeline:
+      - runs: |
+          mkdir -p ${{targets.subpkgdir}}
+          mv a ${{targets.subpkgdir}}/
+
+  - name: wine
+    description: wine
+    pipeline:
+      - runs: |
+          mkdir -p ${{targets.subpkgdir}}
+          mv b ${{targets.subpkgdir}}/
