@@ -44,7 +44,7 @@ jobs:
 
   build:
     name: Test building of packages
-    runs-on: ubuntu-16-core
+    runs-on: ubuntu-latest
     needs: changes
     container:
       image: ghcr.io/wolfi-dev/sdk:latest@sha256:515a2c5072753f81ce2cbb81bda54b035aefcdb41d7249070009fc018fecd4c9
