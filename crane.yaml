@@ -34,4 +34,4 @@ update:
   enabled: true
   github:
     identifier: google/go-containerregistry
-    strip-prefix: V
+    strip-prefix: v
