@@ -44,7 +44,8 @@ jobs:
 
   build:
     name: Test building of packages
-    runs-on: ubuntu-16-core
+    # runs-on: ubuntu-16-core # DONT MERGE
+    runs-on: ubuntu-latest
     needs: changes
     container:
       image: ghcr.io/wolfi-dev/sdk:latest@sha256:cea391001d1405dbc04da897e2e2eb12b1e7db349cd6d584c410dd0165a1d2aa
@@ -118,4 +119,18 @@ jobs:
         continue-on-error: true
         with:
           filePath: diff.log
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Grype scan
+        id: grype_scan
+        continue-on-error: true
+        run: |
+          ./scripts/grype-scan-packages-log.sh > grype_scan_results.md
+
+      - name: PR comment scan
+        uses: thollander/actions-comment-pull-request@632cf9ce90574d125be56b5f3405cda41a84e2fd # v2.3.1
+        # We're seeing jobs using merge queues fail
+        continue-on-error: true
+        with:
+          filePath: grype_scan_results.md
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
