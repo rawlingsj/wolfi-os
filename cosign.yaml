@@ -1,14 +1,13 @@
 package:
   name: cosign
-  version: 2.0.2
-  epoch: 4
+  version: 2.1.1
+  epoch: 0
   description: Container Signing
   copyright:
     - license: Apache-2.0
   dependencies:
     runtime:
       - ca-certificates-bundle
-
 environment:
   contents:
     packages:
@@ -17,19 +16,16 @@ environment:
       - go
   environment:
     CGO_ENABLED: "0"
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/sigstore/cosign/archive/v${{package.version}}/cosign-v${{package.version}}.tar.gz
-      expected-sha256: 5d4950f8718c231fb393206bc9e5b2b49be0eb0d3204563744b3c80a7526764b
-
+      expected-sha256: 7b2ed5c5dfdc8897a36e0658f3fbfc87e7cf91f81633cef9bc3321ce1a1730c8
   - uses: go/build
     with:
       packages: ./cmd/cosign
       output: cosign
       ldflags: -s -w -X sigs.k8s.io/release-utils/version.gitVersion=${{package.version}}
-
 update:
   enabled: true
   github:
