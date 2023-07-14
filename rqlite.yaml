@@ -1,12 +1,11 @@
 package:
   name: rqlite
   # When bumping the version, you can remove the `go get` line in the build.
-  version: 7.20.6
+  version: 7.21.4
   epoch: 0
   description: The lightweight, distributed relational database built on SQLite
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -14,15 +13,13 @@ environment:
       - busybox
       - build-base
       - go
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/rqlite/rqlite
       tag: v${{package.version}}
-      expected-commit: d9424769ff858a6c5b396125fb82597f0581b0c5
+      expected-commit: 4990f54a6aa6c173a4385fd23aacac005b92e50a
       destination: rqlite
-
   - runs: |
       mkdir -p ${{targets.destdir}}/usr/bin
       cd rqlite
@@ -35,9 +32,7 @@ pipeline:
           -ldflags="-s -w -extldflags=-static" \
           -o ${{targets.destdir}}/usr/bin/rqlited \
           ./cmd/rqlited
-
   - uses: strip
-
 subpackages:
   - name: rqlite-oci-entrypoint
     pipeline:
@@ -47,7 +42,6 @@ subpackages:
     dependencies:
       runtime:
         - busybox # The entrypoint script uses a shell
-
 update:
   enabled: true
   github:
