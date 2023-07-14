@@ -1,11 +1,10 @@
 package:
   name: pulumi
-  version: 3.72.2
+  version: 3.75.0
   epoch: 0
   description: Infrastructure as Code in any programming language
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -18,15 +17,13 @@ environment:
       - python3
       - python3-dev
       - patch
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/pulumi/pulumi.git
       tag: v${{package.version}}
       destination: ${{package.name}}
-      expected-commit: 70207e899edd186bd2c24b918babc42151020d2b
-
+      expected-commit: 8731e061ffaf938a78ef0ef8a440a6cf4395b54a
   - working-directory: ${{package.name}}
     pipeline:
       - runs: |
@@ -72,7 +69,6 @@ pipeline:
             cd ../..
           done
       - uses: strip
-
 subpackages:
   - name: "pulumi-language-go"
     description: "Pulumi Language SDK for Go"
@@ -80,7 +76,6 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}/usr/bin"
           mv -v "${{targets.destdir}}"/usr/bin/pulumi-*go* "${{targets.subpkgdir}}/usr/bin"
-
   - name: "pulumi-language-nodejs"
     description: "Pulumi Language SDK for Node.js"
     pipeline:
@@ -89,14 +84,12 @@ subpackages:
           mv -v "${{targets.destdir}}"/usr/bin/pulumi-*nodejs* "${{targets.subpkgdir}}/usr/bin"
           # pulumi-analyzer-policy is built by the nodejs sdk even though it doesnt contain the string "nodejs"
           mv -v "${{targets.destdir}}"/usr/bin/pulumi-analyzer-policy "${{targets.subpkgdir}}/usr/bin"
-
   - name: "pulumi-language-python"
     description: "Pulumi Language SDK for Python"
     pipeline:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}/usr/bin"
           mv -v "${{targets.destdir}}"/usr/bin/pulumi-*python* "${{targets.subpkgdir}}/usr/bin"
-
 update:
   enabled: true
   github:
