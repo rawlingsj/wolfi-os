@@ -1,11 +1,10 @@
 package:
   name: deno
-  version: 1.34.3
+  version: 1.35.1
   epoch: 0
   description: "A modern runtime for JavaScript and TypeScript."
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -19,21 +18,17 @@ environment:
       - glibc-dev
       - posix-libc-utils
       - bash
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/denoland/deno/releases/download/v${{package.version}}/deno_src.tar.gz
-      expected-sha256: 0e236aa5aa7e56e6e0119df5f2ab8cce603659ea9243cc25d88d28b3ed443d86
-
+      expected-sha256: 2bb20669b45d19102f023b4e63de143d5b552d8bfc03b4c247ca877870949496
   - name: Configure and build
     runs: |
       cargo build --release -vv
       mkdir -p ${{targets.destdir}}/usr/bin/
       mv target/release/deno ${{targets.destdir}}/usr/bin/
-
   - uses: strip
-
 update:
   enabled: true
   github:
