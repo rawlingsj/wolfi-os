@@ -1,27 +1,24 @@
 package:
   name: consul
-  version: 1.15.3
+  version: 1.16.0
   # When bumping the version check if the CVE/GHSA mitigations below can be removed.
-  epoch: 1
+  epoch: 0
   description: Consul is a distributed, highly available, and data center aware solution to connect and configure applications across dynamic, distributed infrastructure.
   copyright:
     - license: MPL-2.0
-
 environment:
   contents:
     packages:
       - ca-certificates-bundle
       - busybox
       - go
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/hashicorp/consul
       tag: v${{package.version}}
-      expected-commit: 7ce982ce1846ca14e567a91fa7f088084e736155
+      expected-commit: 192df66abfb08287f0c1f40d84c64f8a1cd961d2
       destination: ${{package.name}}
-
   - working-directory: ${{package.name}}
     pipeline:
       - runs: |
@@ -39,7 +36,6 @@ pipeline:
           # The docker-entrypoint.sh expects the binary to be in /bin so put it there
           mv ./pkg/bin/linux_*/consul ${{targets.destdir}}/bin/consul
       - uses: strip
-
 subpackages:
   - name: ${{package.name}}-oci-entrypoint
     pipeline:
@@ -53,7 +49,6 @@ subpackages:
         - dumb-init
         - su-exec
         - libcap-utils
-
   - name: ${{package.name}}-oci-entrypoint-compat
     pipeline:
       - runs: |
@@ -62,7 +57,6 @@ subpackages:
     dependencies:
       runtime:
         - consul-oci-entrypoint
-
 update:
   enabled: true
   github:
