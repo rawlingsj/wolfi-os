@@ -1,6 +1,6 @@
 package:
   name: dotnet-7
-  version: 7.0.107
+  version: 7.0.109
   epoch: 0
   description: ".NET SDK"
   target-architecture:
@@ -13,7 +13,6 @@ package:
   dependencies:
     runtime:
       - icu
-
 environment:
   contents:
     packages:
@@ -37,19 +36,16 @@ environment:
       - curl
       - bash
       - libunwind-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/dotnet/installer
       tag: v${{package.version}}
-      expected-commit: bf72c06963e2bb23c1abfd97a9ed50e47e155027
+      expected-commit: 3e9283a8e906761fcf9973c0007a75c0eb20baea
       destination: /home/build/installer
-
   - working-directory: /home/build/installer
     runs: |
       ./build.sh /p:ArcadeBuildTarball=true /p:TarballDir=/home/build/src
-
   - working-directory: /home/build/src
     pipeline:
       - runs: |
@@ -78,9 +74,7 @@ pipeline:
               tar zxf artifacts/x64/Release/dotnet-sdk-*.tar.gz -C "${{targets.destdir}}"/usr/share/dotnet
       - runs: |
           ln -s /usr/share/dotnet/dotnet "${{targets.destdir}}"/usr/bin/dotnet
-
   - uses: strip
-
 subpackages:
   - name: dotnet-7-runtime
     description: "The .NET Core Runtime, version 7"
@@ -91,7 +85,6 @@ subpackages:
     dependencies:
       runtime:
         - dotnet-7
-
   - name: aspnet-7-runtime
     description: "The ASP.NET Core Runtime, version 7"
     pipeline:
@@ -101,7 +94,6 @@ subpackages:
     dependencies:
       runtime:
         - dotnet-7-runtime
-
   - name: dotnet-7-targeting-pack
     description: "The .NET Core targeting pack, version 7"
     pipeline:
@@ -109,7 +101,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}"/usr/share/dotnet/packs
           mv "${{targets.destdir}}"/usr/share/dotnet/packs/NETStandard.Library.* "${{targets.subpkgdir}}"/usr/share/dotnet/packs/
           mv "${{targets.destdir}}"/usr/share/dotnet/packs/Microsoft.NETCore.App.* "${{targets.subpkgdir}}"/usr/share/dotnet/packs/
-
   - name: aspnet-7-targeting-pack
     description: "The ASP.NET targeting pack, version 7"
     pipeline:
@@ -119,7 +110,6 @@ subpackages:
     dependencies:
       runtime:
         - dotnet-7-targeting-pack
-
   - name: dotnet-7-sdk
     description: "The .NET Core SDK, version 7"
     pipeline:
@@ -133,7 +123,6 @@ subpackages:
       runtime:
         - dotnet-7-runtime
         - dotnet-7-targeting-pack
-
 update:
   enabled: true
   github:
