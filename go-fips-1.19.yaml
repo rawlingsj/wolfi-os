@@ -1,6 +1,6 @@
 package:
   name: go-fips-1.19
-  version: 1.19.10
+  version: 1.19.11
   epoch: 0
   description: "the Go programming language with OpenSSL cryptography"
   copyright:
@@ -14,7 +14,6 @@ package:
       - binutils-gold # Needed for cgo linking due to upstream issue #15696 which forces use of the gold linker.
       - openssl-dev # Needed for building against cryptographic packages.
       - '!go-1.19'
-
 environment:
   contents:
     packages:
@@ -27,14 +26,12 @@ environment:
       # using pre-built go binaries, which `provides` a go package at an earlier version.
       # Afterwards it depends on previous versions of this package built from source.
       - go
-
 pipeline:
   - uses: fetch
     with:
       uri: https://go.dev/dl/go${{package.version}}.src.tar.gz
-      expected-sha256: 13755bcce529747d5f2930dee034730c86d02bd3e521ab3e2bbede548d3b953f
+      expected-sha256: e25c9ab72d811142b7f41ff6da5165fec2d1be5feec3ef2c66bc0bdecb431489
       strip-components: 0
-
   - working-directory: /home/build/go
     pipeline:
       - uses: patch
@@ -43,11 +40,9 @@ pipeline:
       - uses: patch
         with:
           patches: /home/build/001-initial-openssl-for-fips.patch
-
   - runs: |
       cd go/src
       ./make.bash -v
-
   - runs: |
       cd go
 
@@ -79,9 +74,7 @@ pipeline:
         -exec rm -rf \{\} \+
       find "${{targets.destdir}}"/usr/lib/go/src \( -type f -a -name "*.bat" \) \
         -exec rm -rf \{\} \+
-
   - uses: strip
-
 subpackages:
   - name: "go-fips-1.19-doc"
     description: "go documentation"
@@ -89,7 +82,6 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/share
           mv "${{targets.destdir}}"/usr/share/doc "${{targets.subpkgdir}}"/usr/share/
-
 update:
   enabled: true
   shared: true
