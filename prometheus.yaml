@@ -1,11 +1,10 @@
 package:
   name: prometheus
-  version: 2.44.0
-  epoch: 3
+  version: 2.45.0
+  epoch: 0
   description: The Prometheus monitoring system and time series database.
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -14,20 +13,17 @@ environment:
       - bash
       - go
       - nodejs
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/prometheus/prometheus
       tag: v${{package.version}}
-      expected-commit: 1ac5131f698ebc60f13fe2727f89b115a41f6558
-
+      expected-commit: 8ef767e396bf8445f009f945b0162fd71827f445
   - runs: |
       # Mitigate GHSA-hqxw-f8mx-cpmw
       go get github.com/docker/distribution@v2.8.2-beta.1
 
       go mod tidy
-
   - runs: |
       GOLDFLAGS="-s -w -X github.com/prometheus/common/version.Version=${{package.version}}
         -X github.com/prometheus/common/version.Revision=WolfiLinux
@@ -55,7 +51,6 @@ pipeline:
         -mod=readonly \
         -ldflags "$GOLDFLAGS" \
         ./cmd/promtool
-
   - runs: |
       install -Dm755 prometheus "${{targets.destdir}}"/usr/bin/prometheus
       install -Dm755 promtool "${{targets.destdir}}"/usr/bin/promtool
@@ -79,9 +74,7 @@ pipeline:
       do
         install -Dm644 -t "${{targets.destdir}}"/etc/prometheus/consoles/ "$file"
       done
-
   - uses: strip
-
 update:
   ignore-regex-patterns:
     - '\+stringlabels' # looks like stringlabels are still experimental, let's stick to the main version stream.
