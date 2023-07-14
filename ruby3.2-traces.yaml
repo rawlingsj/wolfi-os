@@ -1,6 +1,6 @@
 package:
   name: ruby3.2-traces
-  version: 0.10.0
+  version: 0.11.1
   epoch: 0
   description: Application instrumentation and tracing.
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     runtime:
       - ruby-3.2
-
 environment:
   contents:
     packages:
@@ -18,31 +17,24 @@ environment:
       - build-base
       - busybox
       - git
-
 vars:
   gem: traces
-
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: db7f430a6ea5207b4df5b4196e9ea38c02a053cf210e55ac202710746ebc6ed6
+      expected-sha256: faf69303e369f3d179622149b56422e55a4724ccacf2645f1c23a83a36aafac6
       uri: https://github.com/socketry/traces/archive/refs/tags/v${{package.version}}.tar.gz
-
   - uses: patch
     with:
       patches: 001-remove-signing-key.patch
-
   - uses: ruby/build
     with:
       gem: ${{vars.gem}}
-
   - uses: ruby/install
     with:
       gem: ${{vars.gem}}
       version: ${{package.version}}
-
   - uses: ruby/clean
-
 update:
   enabled: true
   github:
