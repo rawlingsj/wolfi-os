@@ -1,6 +1,6 @@
 package:
   name: conda
-  version: 23.5.0
+  version: 23.5.2
   epoch: 0
   description: "A system-level, binary package and environment manager running on all major operating systems and platforms."
   copyright:
@@ -8,7 +8,6 @@ package:
   options:
     no-provides: true
     no-depends: true
-
 environment:
   contents:
     packages:
@@ -17,24 +16,20 @@ environment:
       - ca-certificates-bundle
       - bash
       - wget
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/conda/conda
       tag: ${{package.version}}
-      expected-commit: bc5bdd4ac63541cc83ede06424b11a6c1338adf3
-
+      expected-commit: b91a38a1c6a6aff431416ca3f793d81459a7757b
   - if: ${{build.arch}} == 'x86_64'
     runs: |
       export TARGETARCH="amd64"
       bash dev/linux/install_miniconda.sh
-
   - if: ${{build.arch}} == 'aarch64'
     runs: |
       export TARGETARCH="arm64"
       bash dev/linux/install_miniconda.sh
-
   - runs: |
       export LANG=C.UTF-8 LC_ALL=C.UTF-8
       /opt/conda/bin/conda install --update-all -y \
@@ -44,7 +39,6 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/opt/
       mv /opt/conda ${{targets.destdir}}/opt/
-
 update:
   enabled: true
   github:
