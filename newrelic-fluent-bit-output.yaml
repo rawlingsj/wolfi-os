@@ -1,11 +1,10 @@
 package:
   name: newrelic-fluent-bit-output
-  version: 1.17.1
+  version: 1.17.3
   epoch: 0
   description: A Fluent Bit output plugin that sends logs to New Relic
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -14,19 +13,16 @@ environment:
       - build-base
       - go
       - ca-certificates-bundle
-
 pipeline:
   # We can't use go/install because this requires specific ldflags to set the version
   - uses: git-checkout
     with:
       repository: https://github.com/newrelic/newrelic-fluent-bit-output
       tag: v${{package.version}}
-      expected-commit: 36059a99fe95bc7a6904c89c45a32b7958a47fac
-
+      expected-commit: fb0a33ffb1d4e6d5869aeb37a2b80fff7dbc2217
   - uses: patch
     with:
       patches: fix-archs.patch
-
   - runs: |
       # GHSA-p782-xgp4-8hr8
       go get golang.org/x/sys@v0.0.0-20220412211240-33da011f77ad
@@ -35,7 +31,6 @@ pipeline:
       make VERSION=v${{ package.version }} linux/${ARCH}
       mkdir -p ${{targets.destdir}}/fluent-bit/bin
       cp ./out_newrelic-linux-${ARCH}-v${{ package.version }}.so ${{targets.destdir}}/fluent-bit/bin/out_newrelic.so
-
 update:
   enabled: true
   github:
