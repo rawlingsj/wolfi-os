@@ -1,11 +1,10 @@
 package:
   name: telegraf
-  version: 1.27.0
+  version: 1.27.2
   epoch: 0
   description:
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -14,22 +13,18 @@ environment:
       - build-base
       - go
       - gnutar
-
 pipeline:
   - uses: git-checkout
     with:
       tag: v${{package.version}}
-      expected-commit: dd48ee81e915d70b8d4002465e43d9b3b9b3db24
+      expected-commit: 9356fd83edfa9276af1b372b676bed6e5f31eb7b
       repository: https://github.com/influxdata/telegraf
-
   - if: ${{build.arch}} == 'x86_64'
     runs: |
       make package include_packages="linux_amd64.tar.gz"
-
   - if: ${{build.arch}} == 'aarch64'
     runs: |
       make package include_packages="linux_arm64.tar.gz"
-
   - runs: |
       tar -xf build/dist/telegraf-${{package.version}}*.tar.gz
       mkdir -p ${{targets.destdir}}/etc/
@@ -40,9 +35,7 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/var
       mv telegraf-${{package.version}}/var/* ${{targets.destdir}}/var
-
   - uses: strip
-
 update:
   enabled: true
   github:
