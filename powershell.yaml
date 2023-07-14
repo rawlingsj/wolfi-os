@@ -1,7 +1,7 @@
 package:
   name: powershell
-  version: 7.3.4
-  epoch: 1
+  version: 7.3.6
+  epoch: 0
   description: 'cross-platform automation and configuration tool/framework'
   copyright:
     - license: MIT
@@ -10,7 +10,6 @@ package:
       - libpsl-native
       - dotnet-7-runtime
       - ncurses-terminfo-base
-
 environment:
   contents:
     packages:
@@ -23,15 +22,13 @@ environment:
       - lttng-ust-dev
       - libpsl-native
       - dotnet-7-sdk
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/powershell/powershell
       tag: v${{package.version}}
-      expected-commit: 17b3f062872e4070445b2c52ed55a4680e07e139
+      expected-commit: baaad399f1b860da0b2dcf2b749f5bac797fe996
       destination: powershell
-
   - working-directory: /home/build/powershell
     pipeline:
       - runs: |
@@ -73,7 +70,6 @@ pipeline:
 
           # binary link
           ln -s "/usr/lib/${{package.name}}/pwsh" "${{targets.destdir}}"/usr/bin/pwsh
-
 update:
   enabled: true
   github:
