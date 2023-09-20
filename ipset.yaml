@@ -1,6 +1,6 @@
 package:
   name: ipset
-  version: "7.17"
+  version: "7.18"
   epoch: 0
   description: Manage Linux IP sets
   copyright:
@@ -22,7 +22,7 @@ pipeline:
   - uses: fetch
     with:
       uri: https://ipset.netfilter.org/ipset-${{package.version}}.tar.bz2
-      expected-sha512: e308a0d7707ccf7d0cb06a32cf9a822f97862e007abdbab8a91a5a0d5bfbd9f2fb9a3f5e8f36b250ec0d565438c8648a31e8e5b45d8205a76558e90f46e6e597
+      expected-sha512: 8e4044fd764537e3909a4fa54411e012b70b4dc764735748316ba29edc7967cdfa8d1044d2f7d7f72f2654d599435baab17413852cb644fb0465d751a5bcfc88
 
   - uses: autoconf/configure
     with:
