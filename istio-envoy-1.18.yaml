@@ -1,6 +1,6 @@
 package:
   name: istio-envoy-1.18
-  version: 1.18.3
+  version: 1.18.5
   epoch: 0
   description: Envoy with additional Istio plugins (wasm, telemetry, etc)
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     provides:
       - istio-envoy=1.18.999
-
 environment:
   contents:
     packages:
@@ -38,14 +37,12 @@ environment:
       - patch
       # We need to stick to gcc 12 for now, envoy doesn't build with gcc >= 13
       - gcc-12-default
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/istio/proxy
       tag: ${{package.version}}
-      expected-commit: b9b6f76dfa98ee923571601e80e8a5a922b3e1a0
-
+      expected-commit: f558e66e0f092e60899f5a0493b95b32a8df1a84
   - runs: |
       export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
       mkdir -p .cache/bazel/_bazel_root
@@ -61,9 +58,7 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/usr/bin/
       mv bazel-bin/envoy ${{targets.destdir}}/usr/bin/envoy
-
   - uses: strip
-
 subpackages:
   - name: ${{package.name}}-compat
     pipeline:
@@ -75,7 +70,6 @@ subpackages:
     dependencies:
       provides:
         - istio-envoy-compat=1.18.999
-
 update:
   enabled: true
   github:
