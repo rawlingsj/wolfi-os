@@ -1,11 +1,10 @@
 package:
   name: runc
-  version: 1.1.9
-  epoch: 2
+  version: 1.1.10
+  epoch: 0
   description: CLI tool for spawning and running containers according to the OCI specification
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -19,30 +18,25 @@ environment:
       - go-md2man
       - libseccomp-dev
       - libtool
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/opencontainers/runc
       tag: v${{package.version}}
-      expected-commit: ccaecfcbc907d70a7aa870a6650887b901b25b82
+      expected-commit: 18a0cb0f32bcac2ecc9a10f327d282759c144dab
       destination: runc
-
   - runs: |
       cd runc
       make COMMIT=$(git rev-parse HEAD)
       make man
       install -Dsm755 ./runc "${{targets.destdir}}"/usr/bin/runc
       install -Dm644 ./man/man8/* -t "${{targets.destdir}}"/usr/share/man/man8/
-
   - uses: strip
-
 subpackages:
   - name: runc-doc
     pipeline:
       - uses: split/manpages
     description: runc manpages
-
 update:
   enabled: true
   github:
