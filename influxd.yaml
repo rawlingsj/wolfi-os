@@ -1,11 +1,10 @@
 package:
   name: influxd
-  version: 2.7.1
-  epoch: 5
+  version: 2.7.3
+  epoch: 0
   description: Scalable datastore for metrics, events, and real-time analytics
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -17,15 +16,13 @@ environment:
       - git
       - curl
       - rust
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/influxdata/influxdb
       tag: v${{package.version}}
-      expected-commit: 407fa622e9a0a48516dacc7564f7ba59c8307da9
+      expected-commit: ed645d9216af16b49f8c6a49aee84341ea168180
       destination: influxdb
-
   - runs: |
       cd influxdb
       unset LDFLAGS
@@ -39,9 +36,7 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/etc/defaults/influxdb2/
       mv ../default-config.yml ${{targets.destdir}}/etc/defaults/influxdb2/config.yml
-
   - uses: strip
-
 subpackages:
   - name: influxd-oci-entrypoint
     pipeline:
@@ -53,7 +48,6 @@ subpackages:
         - busybox
         - bash
         - yq
-
 update:
   enabled: true
   github:
