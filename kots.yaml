@@ -1,11 +1,10 @@
 package:
   name: kots
-  version: 1.102.2
+  version: 1.103.3
   epoch: 0
   description: Kubernetes Off-The-Shelf (KOTS) Software
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -16,13 +15,11 @@ environment:
       - go
       - nodejs
       - yarn
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/replicatedhq/kots/archive/refs/tags/v${{package.version}}.tar.gz
-      expected-sha256: efa4b74c190ebe3a02073197f6281d83443a8c29970c8e4359df7991d14b58bf
-
+      expected-sha256: dc8e715123402d021205f2f1424bbe8e8cc80273dd6ede95ec47482268356d03
   - runs: |
       set -x
       export DESTDIR="${{targets.destdir}}"
@@ -76,7 +73,6 @@ pipeline:
       ln -s /usr/bin/kustomize ${{targets.destdir}}/usr/local/bin/kustomize5
 
       ln -s /usr/bin/kubectl ${{targets.destdir}}/usr/local/bin/kubectl
-
 update:
   enabled: true
   github:
