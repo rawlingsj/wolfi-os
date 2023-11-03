@@ -1,12 +1,11 @@
 # Generated from https://git.alpinelinux.org/aports/plain/main/zfs/APKBUILD
 package:
   name: zfs
-  version: 2.1.12
+  version: 2.2.0
   epoch: 0
   description: Advanced filesystem and volume manager
   copyright:
     - license: CDDL-1.0
-
 environment:
   contents:
     packages:
@@ -23,14 +22,12 @@ environment:
       - linux-headers
       - libtool
       - libtirpc-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/openzfs/zfs
-      expected-commit: 86783d7d92cf7a859464719a917fdff845b9a9e1
+      expected-commit: 95785196f26e92d82cf4445654ba84e4a9671c57
       tag: zfs-${{package.version}}
-
   - runs: |
       export CFLAGS="$CFLAGS -fno-tree-vectorize"
       export CXXFLAGS="$CXXFLAGS -fno-tree-vectorize"
@@ -47,41 +44,32 @@ pipeline:
         --infodir=/usr/share/info \
         --localstatedir=/var \
         --with-config=user
-
   - uses: autoconf/make
-
   - uses: autoconf/make-install
-
   - runs: |
       rm -rf "${{targets.destdir}}"/usr/share/initramfs-tools
-
   - uses: strip
-
 subpackages:
   - name: zfs-dev
     pipeline:
       - uses: split/dev
     description: zfs dev
-
   - name: zfs-doc
     pipeline:
       - uses: split/manpages
     description: zfs manpages
-
   - name: zfs-udev
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/lib/udev
           mv ${{targets.destdir}}/lib/udev/* ${{targets.subpkgdir}}/lib/udev/
     description: zfs udev
-
   - name: zfs-scripts
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/share/zfs
           mv ${{targets.destdir}}/usr/share/zfs/* ${{targets.subpkgdir}}/usr/share/zfs/
     description: zfs scripts
-
   - name: zfs-utils-py
     pipeline:
       - runs: |
@@ -91,7 +79,6 @@ subpackages:
               ${{targets.destdir}}/usr/bin/dbufstat \
               ${{targets.subpkgdir}}/usr/bin
     description: zfs utils
-
 update:
   enabled: true
   github:
