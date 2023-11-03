@@ -1,11 +1,10 @@
 package:
   name: bat
-  version: 0.23.0
-  epoch: 1
+  version: 0.24.0
+  epoch: 0
   description: "A cat(1) clone with wings"
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -15,30 +14,24 @@ environment:
       - rust
       - libgit2-dev
       - zlib-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/sharkdp/bat
       tag: v${{package.version}}
-      expected-commit: 871abd27aa91264e01539da849add0330b24cb9c
-
+      expected-commit: fc9546854f5a7b38823f4990453c6cde386bfd3b
   - runs: |
       cargo fetch
       cargo build --frozen --release
-
   - runs: |
       install -Dm755 target/release/bat "${{targets.destdir}}"/usr/bin/bat
-
   - uses: strip
-
 subpackages:
   - name: ${{package.name}}-doc
     pipeline:
       - uses: split/manpages
       - uses: split/infodir
     description: ${{package.name}} manpages
-
 update:
   enabled: true
   github:
