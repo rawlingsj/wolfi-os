@@ -1,11 +1,10 @@
 package:
   name: kubernetes-ingress-defaultbackend
-  version: 1.25.0
-  epoch: 1
+  version: 1.25.1
+  epoch: 0
   description: 'A simple web server that respond 404 common used in kubernetes ingress, serve pages 404 at root and 200 at /healthz'
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -16,22 +15,18 @@ environment:
       - ca-certificates-bundle
   environment:
     CGO_ENABLED: 0
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/kubernetes/ingress-gce
       tag: v${{package.version}}
-      expected-commit: f5663f6f51e5ddfca565ed1b4b96835ae1b6a921
-
+      expected-commit: f5f1a1ceba57499125f023b4a682b33e825f8263
   - uses: go/build
     with:
       packages: ./cmd/404-server
       output: defaultbackend
       ldflags: -s -w
-
   - uses: strip
-
 update:
   enabled: true
   github:
