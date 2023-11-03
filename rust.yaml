@@ -1,6 +1,6 @@
 package:
   name: rust
-  version: 1.72.1
+  version: 1.73.0
   epoch: 0
   description: "Empowering everyone to build reliable and efficient software."
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     runtime:
       - libLLVM-16
-
 environment:
   contents:
     packages:
@@ -31,18 +30,15 @@ environment:
       - zlib-dev
       - patch
       - rust
-
 pipeline:
   - uses: fetch
     with:
       uri: https://static.rust-lang.org/dist/rustc-${{package.version}}-src.tar.xz
-      expected-sha256: aea58d962ff1c19521b9f587aad88285f0fd35b6b6738b031a7a15bb1b70a7c3
+      expected-sha256: 6eaf672dbea2e6596af8c999f5e6924b9af4bb8b02166bfe0b928e68aa75ae62
       extract: false
-
   - runs: |
       tar -xJf rustc-${{package.version}}-src.tar.xz
       rm rustc-${{package.version}}-src.tar.xz
-
   - runs: |
       export CFLAGS="$CFLAGS -O2 -I/usr/lib/llvm-16/include"
       export CXXFLAGS="$CXXFLAGS -O2 -I/usr/lib/llvm-16/include"
@@ -78,7 +74,6 @@ pipeline:
         --set="target.${ARCH}.crt-static=false" \
         --set="target.${ARCH}.musl-root=/usr" \
         --set="target.${ARCH}.crt-static=false"
-
   - runs: |
       cd rustc-${{package.version}}-src
       sed 's/#deny-warnings = .*/deny-warnings = false/' -i config.toml
@@ -93,9 +88,7 @@ pipeline:
       export OPENSSL_NO_VENDOR=1
       export RUST_BACKTRACE=1
       DESTDIR=${{targets.destdir}} python3 ./x.py install --jobs $(nproc)
-
   - uses: strip
-
   # delete uneeded files eg uninstalltion
   - runs: |
       rm ${{targets.destdir}}/usr/lib/rustlib/components
@@ -103,7 +96,6 @@ pipeline:
       rm ${{targets.destdir}}/usr/lib/rustlib/rust-installer-version
       rm ${{targets.destdir}}/usr/lib/rustlib/uninstall.sh
       rm ${{targets.destdir}}/usr/lib/rustlib/manifest-*
-
   # rustbuild always installs copies of the shared libraries to /usr/lib,
   # overwrite them with symlinks to the per-architecture versions
   - runs: |
@@ -111,7 +103,6 @@ pipeline:
       cd ${{targets.destdir}}
       ln -srft usr/lib   usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/*.so
       ln -srft usr/lib32 usr/lib/rustlib/i686-unknown-linux-gnu/lib/*.so
-
 update:
   enabled: true
   github:
