@@ -1,6 +1,6 @@
 package:
   name: aws-for-fluent-bit
-  version: 2.31.12.20230821
+  version: 2.32.0
   epoch: 0
   description: AWS provides a Fluent Bit image with plugins for both CloudWatch Logs and Kinesis Data Firehose.
   copyright:
@@ -15,24 +15,20 @@ package:
       - aws-flb-firehose-compat
       - aws-flb-cloudwatch
       - aws-flb-cloudwatch-compat
-
 environment:
   contents:
     packages:
       - build-base
       - busybox
       - ca-certificates-bundle
-
 vars:
   FLB_DOCKER_BRANCH: "1.8"
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/aws/aws-for-fluent-bit
-      expected-commit: 7ea28b0a41d56fae96aeee32d821f2b00402d467
+      expected-commit: 00496b6369984b83de44ad5b3ee49db184f5fa22
       tag: ${{package.version}}
-
   - runs: |
       mkdir -p "${{targets.destdir}}"/etc/ecs
       mkdir -p "${{targets.destdir}}"/etc/fluent-bit/etc
@@ -42,7 +38,6 @@ pipeline:
       cp ./entrypoint.sh "${{targets.destdir}}"/etc/fluent-bit/entrypoint.sh
       cp AWS_FOR_FLUENT_BIT_VERSION "${{targets.destdir}}"/etc/fluent-bit/AWS_FOR_FLUENT_BIT_VERSION
       chmod +x "${{targets.destdir}}"/etc/fluent-bit/entrypoint.sh
-
   - runs: |
       mkdir -p "${{targets.destdir}}"/etc/fluent-bit/configs
       mv configs/parse-json.conf \
@@ -52,20 +47,17 @@ pipeline:
         configs/plugin-and-storage-metrics-to-cloudwatch.conf \
         configs/plugin-metrics-parser.conf \
         "${{targets.destdir}}"/etc/fluent-bit/configs/
-
   - working-directory: fluent-bit-docker-image
     pipeline:
       - uses: git-checkout
         with:
           repository: https://github.com/fluent/fluent-bit-docker-image
           branch: ${{vars.FLB_DOCKER_BRANCH}}
-          expected-commit: 98ce3316ea93751ddd33bc319a8f9d177493155b
+          expected-commit: 00496b6369984b83de44ad5b3ee49db184f5fa22
       - runs: |
           cp conf/parsers*.conf "${{targets.destdir}}"/etc/fluent-bit/etc
           cp conf/parsers*.conf "${{targets.destdir}}"/etc/fluent-bit/parsers/
-
   - uses: strip
-
 subpackages:
   - name: "aws-for-fluent-bit-compat"
     description: "Compatibility package to place binaries in the location expected by AWS for Fluent Bit"
@@ -80,7 +72,6 @@ subpackages:
           ln -sf /etc/fluent-bit/entrypoint.sh ${{targets.subpkgdir}}/entrypoint.sh
           ln -sf /usr/bin/fluent-bit ${{targets.subpkgdir}}/fluent-bit/bin/fluent-bit
       - uses: strip
-
 update:
   enabled: true
   github:
