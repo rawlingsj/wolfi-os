@@ -1,11 +1,10 @@
 package:
   name: wasmtime
-  version: 12.0.2
+  version: 14.0.4
   epoch: 0
   description: "A fast and secure runtime for WebAssembly"
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -15,14 +14,12 @@ environment:
       - busybox
       - ca-certificates-bundle
       - build-base
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/bytecodealliance/wasmtime
       tag: v${{package.version}}
-      expected-commit: 79a5d2ac52ea76e47265c46a77d329ca0e6839c9
-
+      expected-commit: 5fc1252ff139d78b6c27d23d50a54732b0ab09aa
   - name: Configure and build
     runs: |
       git submodule update --init
@@ -30,9 +27,7 @@ pipeline:
       cargo build --release --manifest-path crates/c-api/Cargo.toml
       mkdir -p ${{targets.destdir}}/usr/bin/
       mv target/release/wasmtime ${{targets.destdir}}/usr/bin/
-
   - uses: strip
-
 subpackages:
   - name: "libwasmtime"
     description: "c library for wasmtime"
@@ -41,7 +36,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/usr/lib/
           mv target/release/libwasmtime.* ${{targets.subpkgdir}}/usr/lib/
       - uses: strip
-
 update:
   enabled: true
   github:
