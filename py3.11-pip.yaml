@@ -1,7 +1,7 @@
 # Generated from https://pypi.org/project/pip/
 package:
   name: py3.11-pip
-  version: 23.2.1
+  version: 23.3.1
   epoch: 0
   description: The PyPA recommended tool for installing Python packages.
   copyright:
@@ -12,7 +12,6 @@ package:
     runtime:
       - python-3.11
       - py3.11-setuptools
-
 environment:
   contents:
     packages:
@@ -22,22 +21,17 @@ environment:
       - build-base
       - python-3.11
       - py3.11-setuptools
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/pypa/pip
-      expected-commit: 4a79e65cb6aac84505ad92d272a29f0c3c1aedce
+      expected-commit: 5364f26f9631dc07ed1bdfc88e1bec1bead2bce3
       tag: ${{package.version}}
-
   - name: Python Build
     runs: python setup.py build
-
   - name: Python Install
     runs: python setup.py install --prefix=/usr --root="${{targets.destdir}}"
-
   - uses: strip
-
 update:
   enabled: true
   shared: true
