@@ -1,14 +1,13 @@
 package:
   name: crossplane-provider-azure
-  version: 0.36.0
-  epoch: 1
+  version: 0.38.2
+  epoch: 0
   description: Official Azure Provider for Crossplane by Upbound
   copyright:
     - license: Apache-2.0
   dependencies:
     runtime:
       - terraform-provider-azurerm
-
 environment:
   contents:
     packages:
@@ -21,14 +20,12 @@ environment:
       - gzip
   environment:
     CGO_ENABLED: 0
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/upbound/provider-azure
       tag: v${{package.version}}
-      expected-commit: d56f4bfc3e3fff83600494f2e6d14686a112008c
-
+      expected-commit: d5cd43764a54cd188c3ff232b03adde7df263784
   - runs: |
       # `make` downloads `up`, unless we move our prebuilt `up` to where it expects it.
       GOARCH=$(go env GOARCH)
@@ -45,7 +42,6 @@ pipeline:
 
       mkdir -p "${{targets.destdir}}"/usr/local/bin/
       cp ./_output/bin/linux_${GOARCH}/monolith "${{targets.destdir}}"/usr/local/bin/provider
-
 data:
   - name: packages
     items:
@@ -54,7 +50,6 @@ data:
       managedidentity: 'provider-azure-managedidentity'
       sql: 'provider-azure-sql'
       storage: 'provider-azure-storage'
-
 subpackages:
   - name: crossplane-provider-azure-${{range.key}}
     range: packages
@@ -63,7 +58,6 @@ subpackages:
           up xpkg xp-extract xpkg.upbound.io/upbound/${{range.value}}:v${{package.version}}
           mkdir -p "${{targets.subpkgdir}}"
           gunzip out.gz -c > "${{targets.subpkgdir}}"/package.yaml
-
 update:
   enabled: true
   github:
