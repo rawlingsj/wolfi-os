@@ -1,6 +1,6 @@
 package:
   name: py3-urllib3-1
-  version: 1.26.16
+  version: 2.0.1
   epoch: 0
   description: "HTTP library with thread-safe connection pooling, file post, and more"
   copyright:
@@ -10,7 +10,6 @@ package:
       - py3-urllib3=1.999
     runtime:
       - python3
-
 environment:
   contents:
     packages:
@@ -20,24 +19,19 @@ environment:
       - py3-gpep517
       - py3-setuptools
       - py3-wheel
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/urllib3/urllib3.git
       tag: ${{package.version}}
-      expected-commit: d94029b7e2193ff47b627906a70e06377a09aae8
-
+      expected-commit: b85e93d619a323b92c2954da852857e0119d71b8
   - runs: |
       python3 -m gpep517 build-wheel \
         --wheel-dir dist \
         --output-fd 3 3>&1 >&2
-
   - runs: |
       python3 -m installer -d "${{targets.destdir}}" dist/*.whl
-
   - uses: strip
-
 update:
   enabled: true
   ignore-regex-patterns:
