@@ -1,7 +1,7 @@
 package:
   name: php-8.1
-  version: 8.1.23
-  epoch: 3
+  version: 8.1.25
+  epoch: 0
   description: "the PHP programming language"
   copyright:
     - license: PHP-3.01
@@ -10,7 +10,6 @@ package:
       - php=${{package.version}}-r${{package.epoch}}}
     runtime:
       - libxml2
-
 environment:
   contents:
     packages:
@@ -41,19 +40,16 @@ environment:
       - postgresql-15-dev
       - readline-dev
       - sqlite-dev
-
 pipeline:
   - uses: fetch
     with:
       uri: https://www.php.net/distributions/php-${{package.version}}.tar.gz
-      expected-sha256: ec5330b3978edc8fe2f78830720505bf69d12542622b5cddccee63ae3a0e5b58
+      expected-sha256: 1a8c59d6b3eccb404c229e947558d2bf1220c3dec0b0036690fadc07f39934ab
       extract: false
-
   - name: Prepare Build Folder
     runs: |
       mv php-${{package.version}}.tar.gz $HOME/
       tar zxf $HOME/php-${{package.version}}.tar.gz
-
   - name: Configure
     runs: |
       cd $HOME/php-${{package.version}}
@@ -116,24 +112,19 @@ pipeline:
         --enable-posix=shared \
         --with-pgsql=shared \
         --with-zip=shared
-
   - uses: autoconf/make
     with:
       dir: $HOME/php-${{package.version}}
-
   - name: Make Install
     runs: |
       cd $HOME/php-${{package.version}}
       INSTALL_ROOT=${{targets.destdir}} DESTDIR=${{targets.destdir}} make install
-
   - uses: strip
-
   - name: Copy configuration and set up alias on /bin
     runs: |
       mkdir -p "${{targets.destdir}}/etc/php/conf.d"
       mv $HOME/php-${{package.version}}/php.ini-production ${{targets.destdir}}/etc/php/php.ini
       mkdir -p "${{targets.destdir}}/bin" && ln -s /usr/bin/php "${{targets.destdir}}/bin/php"
-
 data:
   - name: extensions
     items:
@@ -172,7 +163,6 @@ data:
       xmlwriter: XMLWriter
       fileinfo: fileinfo
       zip: Zip
-
 subpackages:
   - range: extensions
     name: "php-${{range.key}}"
@@ -190,7 +180,6 @@ subpackages:
           prefix=
           [ "${{range.key}}" != "opcache" ] || prefix="zend_"
           echo "${prefix}extension=${{range.key}}.so" > $CONF_DIR/"${{range.key}}.ini"
-
   - name: php-dev
     description: PHP 8.1 development headers
     dependencies:
@@ -202,7 +191,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           mv ${{targets.destdir}}/usr/bin/phpize ${{targets.subpkgdir}}/usr/bin/
           mv ${{targets.destdir}}/usr/lib ${{targets.subpkgdir}}/usr
-
   - name: php-cgi
     description: PHP 8.1 CGI
     dependencies:
@@ -212,7 +200,6 @@ subpackages:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           mv ${{targets.destdir}}/usr/bin/php-cgi ${{targets.subpkgdir}}/usr/bin/
-
   - name: php-dbg
     description: Interactive PHP Debugger
     dependencies:
@@ -222,7 +209,6 @@ subpackages:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           mv ${{targets.destdir}}/usr/bin/phpdbg ${{targets.subpkgdir}}/usr/bin/
-
   - name: php-fpm
     description: PHP 8.1 FastCGI Process Manager (FPM)
     dependencies:
@@ -249,7 +235,6 @@ subpackages:
             echo; \
           	echo 'decorate_workers_output = no'; \
           } | tee ${{targets.subpkgdir}}/etc/php/php-fpm.d/zz-apko.conf
-
 update:
   enabled: true
   github:
