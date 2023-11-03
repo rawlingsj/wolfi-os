@@ -1,14 +1,13 @@
 package:
   name: kyverno
-  version: 1.10.3
-  epoch: 2
+  version: 1.10.5
+  epoch: 0
   description: Kubernetes Native Policy Management
   copyright:
     - license: Apache-2.0
   dependencies:
     runtime:
       - ca-certificates-bundle
-
 environment:
   contents:
     packages:
@@ -18,50 +17,42 @@ environment:
       - busybox
       - go
       - git
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/kyverno/kyverno
       tag: v${{package.version}}
-      expected-commit: 8137b4b8afd7ab1464a42e717dc83f1cc471a4a1
-
+      expected-commit: 1144e2454b17415321ea4f8e3e1f23ee3059a65d
   - runs: |
       make build-all
       mkdir -p ${{targets.destdir}}/usr/bin
       install -Dm755 cmd/kyverno/kyverno ${{targets.destdir}}/usr/bin/kyverno
-
 subpackages:
   - name: kyverno-init-container
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           install -Dm755 cmd/kyverno-init/kyvernopre ${{targets.subpkgdir}}/usr/bin/kyvernopre
-
   - name: kyverno-reports-controller
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           install -Dm755 cmd/reports-controller/reports-controller ${{targets.subpkgdir}}/usr/bin/reports-controller
-
   - name: kyverno-background-controller
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           install -Dm755 cmd/background-controller/background-controller ${{targets.subpkgdir}}/usr/bin/background-controller
-
   - name: kyverno-cleanup-controller
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           install -Dm755 cmd/cleanup-controller/cleanup-controller ${{targets.subpkgdir}}/usr/bin/cleanup-controller
-
   - name: kyverno-cli
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           install -Dm755 cmd/cli/kubectl-kyverno/kubectl-kyverno ${{targets.subpkgdir}}/usr/bin/kubectl-kyverno
-
 update:
   enabled: true
   github:
