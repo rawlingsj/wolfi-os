@@ -1,6 +1,6 @@
 package:
   name: py3-semgrep
-  version: 1.41.0
+  version: 1.47.0
   epoch: 0
   description: "Lightweight static analysis for many languages. Find bug variants with patterns that look like source code."
   copyright:
@@ -25,7 +25,6 @@ package:
       - py3-tomli
       - py3-typing-extensions
       - py3-wcmatch
-
 environment:
   contents:
     packages:
@@ -36,14 +35,12 @@ environment:
       - py3-gpep517
       - py3-wheel
       - py3-setuptools
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/returntocorp/semgrep
       tag: v${{package.version}}
-      expected-commit: d6476384e5ed33a020d06f731ed551d63f2ba418
-
+      expected-commit: 2b41173d4b3029f5dd821375dcaf224c41cc9ac8
   - runs: |
       cd cli
       git submodule update --init -- src/semgrep/semgrep_interfaces
@@ -52,9 +49,7 @@ pipeline:
         --output-fd 3 3>&1 >&2
       python3 -m installer -d "${{targets.destdir}}" \
         dist/*.whl
-
   - uses: strip
-
 update:
   enabled: true
   github:
