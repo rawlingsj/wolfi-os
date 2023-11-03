@@ -1,6 +1,6 @@
 package:
   name: sbt
-  version: 1.9.6
+  version: 1.9.7
   epoch: 0
   description: A scala build tool
   target-architecture:
@@ -15,7 +15,6 @@ package:
       - openjdk-11-jre
       - openjdk-11-default-jvm
       - bash
-
 environment:
   contents:
     packages:
@@ -28,14 +27,12 @@ environment:
       - openjdk-11-jre
       - openjdk-11-default-jvm
       - sbt
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/sbt/sbt
       tag: v${{package.version}}
-      expected-commit: ef8652f93a06bdf24435ec2dd459a7055adab1db
-
+      expected-commit: 25f2ea03ea101eeae63fbf68737242fafabe0f3a
   - runs: |
       cd launcher-package
 
@@ -51,15 +48,12 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/usr/bin
       ln -sf /usr/share/java/sbt/bin/sbt ${{targets.destdir}}/usr/bin/sbt
-
   - if: ${{build.arch}} == 'aarch64'
     runs: |
       install -m644 -Dt ${{targets.destdir}}/usr/share/java/sbt/bin ./launcher-package/sbt/bin/sbtn-aarch64-pc-linux
-
   - if: ${{build.arch}} == 'amd64'
     runs: |
       install -m644 -Dt ${{targets.destdir}}/usr/share/java/sbt/bin ./launcher-package/sbt/bin/sbtn-x86_64-pc-linux
-
 update:
   enabled: true
   github:
