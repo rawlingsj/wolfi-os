@@ -1,14 +1,13 @@
 package:
   name: openjdk-20
-  version: 20.0.2.9
-  epoch: 1
+  version: "20.36"
+  epoch: 0
   description:
   copyright:
     - license: GPL-2.0-with-classpath-exception
   dependencies:
     runtime:
       - openjdk-20-jre
-
 environment:
   contents:
     packages:
@@ -37,33 +36,27 @@ environment:
       - lcms2-dev
       - openjdk-19-default-jvm
       - openjdk-19
-
 # transform melange version to contain "+" rather than third "." so we can use a var in the fetch URL
 var-transforms:
   - from: ${{package.version}}
     match: \.(\d+)$
     replace: +$1
     to: mangled-package-version
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/openjdk/jdk20u/archive/refs/tags/jdk-${{vars.mangled-package-version}}.tar.gz
-      expected-sha512: 18a352ad5474b8499b7fcdacdfbf7392ff16681e3a47c925dcb4edd7a326c690fdfd5a40977783c2c85cb2b55c9fd70d70e7cf37357cd44e02383f96fb9df8f4
-
+      expected-sha512: 033afb453b12125f34f7a27d676d9c5372e40c65cff8fef6a16c8d8f1b652f5f3405f7ee9ec8761fd54c761c32043e1ec53f2414a6b1e78034fa59e8a6391f97
   - working-directory: /home/build/googletest
     pipeline:
       - uses: fetch
         with:
           uri: https://github.com/google/googletest/archive/release-1.8.1.tar.gz
           expected-sha512: e6283c667558e1fd6e49fa96e52af0e415a3c8037afe1d28b7ff1ec4c2ef8f49beb70a9327b7fc77eb4052a58c4ccad8b5260ec90e4bceeac7a46ff59c4369d7
-
   - uses: patch
     with:
       patches: FixNullPtrCast.patch JDK-8282306_disable-test.patch JDK-8299245_disable-tests.patch
-
   - runs: chmod +x configure
-
   - uses: autoconf/configure
     with:
       opts: |
@@ -88,9 +81,7 @@ pipeline:
         --with-lcms=system \
         --with-gtest="/home/build/googletest" \
         --with-version-string="${{vars.mangled-package-version}}"
-
   - runs: make jdk-image
-
   # Check we built something valid
   - runs: |
       _java_bin="./build/*-server-release/images/jdk/bin"
@@ -101,14 +92,12 @@ pipeline:
       # NOTE: Disable flakey tests for now as we're seeing builds hang on aarch64
       # # run the gtest unittest suites
       # make test-hotspot-gtest
-
   - runs: |
       _java_home="usr/lib/jvm/java-20-openjdk"
 
       mkdir -p "${{targets.destdir}}"/$_java_home
       cp -r build/*-server-release/images/jdk/* "${{targets.destdir}}"/$_java_home
       rm "${{targets.destdir}}"/$_java_home/lib/src.zip
-
 subpackages:
   - name: "openjdk-20-dbg"
     description: "OpenJDK 20 Java Debug Symbols"
@@ -117,7 +106,6 @@ subpackages:
     dependencies:
       runtime:
         - openjdk-20
-
   - name: "openjdk-20-jre"
     description: "OpenJDK 20 Java Runtime Environment"
     dependencies:
@@ -138,7 +126,6 @@ subpackages:
               "${{targets.destdir}}"/$_java_home/lib/liblcms.so \
               "${{targets.destdir}}"/$_java_home/lib/libsplashscreen.so \
               "${{targets.subpkgdir}}"/$_java_home/lib
-
   - name: "openjdk-20-jre-base"
     description: "OpenJDK 20 Java Runtime Environment (headless)"
     dependencies:
@@ -178,7 +165,6 @@ subpackages:
 
           # symlink for `java-common` to work (which expects jre in $_java_home/jre)
           ln -sf . "${{targets.subpkgdir}}/$_java_home/jre"
-
   - name: "openjdk-20-jmods"
     description: "OpenJDK 20 jmods"
     pipeline:
@@ -186,7 +172,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}"/usr/lib/jvm/java-20-openjdk
           mv "${{targets.destdir}}"/usr/lib/jvm/java-20-openjdk/jmods \
              "${{targets.subpkgdir}}"/usr/lib/jvm/java-20-openjdk
-
   - name: "openjdk-20-doc"
     description: "OpenJDK 20 Documentation"
     pipeline:
@@ -194,7 +179,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}"/usr/lib/jvm/java-20-openjdk
           mv "${{targets.destdir}}"/usr/lib/jvm/java-20-openjdk/man \
              "${{targets.subpkgdir}}"/usr/lib/jvm/java-20-openjdk
-
   - name: "openjdk-20-demos"
     description: "OpenJDK 20 Demos"
     pipeline:
@@ -202,7 +186,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}"/usr/lib/jvm/java-20-openjdk
           mv "${{targets.destdir}}"/usr/lib/jvm/java-20-openjdk/demo \
              "${{targets.subpkgdir}}"/usr/lib/jvm/java-20-openjdk
-
   - name: "openjdk-20-default-jvm"
     description: "Use the openjdk-20 JVM as the default JVM"
     dependencies:
@@ -214,7 +197,6 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/lib/jvm
           ln -sf java-20-openjdk "${{targets.subpkgdir}}"/usr/lib/jvm/default-jvm
-
   - name: "openjdk-20-default-jdk"
     description: "Use the openjdk-20 JVM as the default JVM with the JDK installed"
     dependencies:
@@ -223,7 +205,6 @@ subpackages:
         - openjdk-20
       provides:
         - default-jdk=1.20
-
 update:
   enabled: true
   shared: true
