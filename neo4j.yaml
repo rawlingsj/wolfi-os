@@ -1,6 +1,6 @@
 package:
   name: neo4j
-  version: "5.11.0"
+  version: 5.13.0
   epoch: 0
   description:
   copyright:
@@ -9,7 +9,6 @@ package:
     runtime:
       - openjdk-17-jre
       - bash
-
 environment:
   contents:
     packages:
@@ -22,16 +21,13 @@ environment:
       - bash
       - wolfi-base
       - wolfi-baselayout
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/neo4j/neo4j
       tag: ${{package.version}}
-      expected-commit: 3dd3043d91f017690d57d3a2c62aab80f3fd8da5
-
+      expected-commit: 60f235e37443d4820c5c5c2a251a4096cf18a430
   - uses: maven/configure-mirror
-
   - runs: |
       export LANG=en_US.UTF-8
 
@@ -44,7 +40,6 @@ pipeline:
       for i in neo4j neo4j-admin cypershell; do
         ln -sf /usr/share/java/neo4j/bin/$i ${{targets.destdir}}/usr/bin/$i
       done
-
 subpackages:
   - name: neo4j-oci-entrypoint
     description: OCI entrypoint for Neo4j
@@ -52,7 +47,6 @@ subpackages:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           mv entrypoint.sh ${{targets.subpkgdir}}/usr/bin/entrypoint.sh
-
 update:
   enabled: true
   github:
