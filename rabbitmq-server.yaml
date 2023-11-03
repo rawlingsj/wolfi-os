@@ -1,6 +1,6 @@
 package:
   name: rabbitmq-server
-  version: 3.12.4
+  version: 3.12.8
   epoch: 0
   description: Open source RabbitMQ. core server and tier 1 (built-in) plugins
   copyright:
@@ -10,7 +10,6 @@ package:
       - erlang
       # rabbitmq-server is a wrapper shell script.
       - busybox
-
 environment:
   contents:
     packages:
@@ -25,19 +24,15 @@ environment:
       - libxslt
       - python3
       - rsync
-
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: f43e7d21997bcd827391262e15c03a20fb6d088f528da704fe5d38714877027f
+      expected-sha256: 820a9394a19e32be63abae0a90b2081c399a47fa2d7c4d674924634080a247e4
       uri: https://github.com/rabbitmq/rabbitmq-server/releases/download/v${{package.version}}/rabbitmq-server-${{package.version}}.tar.xz
-
   - runs: |
       cd deps/rabbitmq_cli
       mix format
-
   - uses: autoconf/make
-
   - runs: |
       make install install-bin install-man \
         DESTDIR="${{targets.destdir}}" \
@@ -69,15 +64,12 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/root
       ln -sf /var/lib/rabbitmq/.erlang.cookie ${{targets.destdir}}/root/.erlang.cookie
-
   - uses: strip
-
 subpackages:
   - name: "rabbitmq-doc"
     description: "rabbitmq documentation"
     pipeline:
       - uses: split/manpages
-
 update:
   enabled: true
   github:
