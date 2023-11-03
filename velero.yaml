@@ -1,6 +1,6 @@
 package:
   name: velero
-  version: 1.11.1
+  version: 1.12.1
   epoch: 0
   description: Backup and migrate Kubernetes applications and their persistent volumes
   copyright:
@@ -9,7 +9,6 @@ package:
     runtime:
       - wolfi-base
       - restic
-
 environment:
   contents:
     packages:
@@ -18,14 +17,12 @@ environment:
       - build-base
       - go
       - git
-
 pipeline:
   - uses: git-checkout
     with:
       tag: v${{package.version}}
-      expected-commit: bdbe7eb242b0f64d5b04a7fea86d1edbb3a3587c
+      expected-commit: 5c4fdfe147357ec7b908339f4516cd96d6b97c61
       repository: https://github.com/vmware-tanzu/velero
-
   - runs: |
       CGO_ENABLED=0
       GO111MODULE=on
@@ -61,16 +58,13 @@ pipeline:
         -trimpath \
         -ldflags "$LDFLAGS" \
         ./cmd/velero-restore-helper
-
   - uses: strip
-
 subpackages:
   - name: velero-restore-helper
     description: Velero Restore Helper
     pipeline:
       - working-directory: "${{targets.subpkgdir}}/usr/bin/"
       - runs: mv ${{targets.destdir}}/usr/bin/velero-restore-helper .
-
 update:
   enabled: true
   github:
