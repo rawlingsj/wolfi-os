@@ -1,11 +1,10 @@
 package:
   name: wasmer
-  version: 4.2.0
+  version: 4.2.3
   epoch: 0
   description: The leading WebAssembly Runtime supporting WASI and Emscripten.
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -14,28 +13,23 @@ environment:
       - build-base
       - bash
       - rust
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/wasmerio/wasmer
       tag: v${{package.version}}
-      expected-commit: 20f1ae3be5a8e1802f54a945da6a3666e906d13c
-
+      expected-commit: 7cb550db60656352cc527eaf869981d39448e38d
   - runs: |
       make build-wasmer build-capi
       mkdir -p ${{targets.destdir}}/usr/bin
       mv target/release/wasmer ${{targets.destdir}}/usr/bin/
-
   - uses: strip
-
 subpackages:
   - name: wasmer-capi
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/lib
           mv target/release/libwasmer.so ${{targets.subpkgdir}}/usr/lib/
-
 update:
   enabled: true
   github:
