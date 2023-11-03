@@ -1,14 +1,13 @@
 package:
   name: kubernetes-csi-external-attacher-4.4
-  version: 4.4.0
-  epoch: 1
+  version: 4.4.1
+  epoch: 0
   description: Sidecar container that watches Kubernetes VolumeAttachment objects and triggers ControllerPublish/Unpublish against a CSI endpoint
   copyright:
     - license: Apache-2.0
   dependencies:
     provides:
       - kubernetes-csi-external-attacher=${{package.full-version}}
-
 environment:
   contents:
     packages:
@@ -17,22 +16,18 @@ environment:
       - build-base
       - go
       - ca-certificates-bundle
-
 pipeline:
   # We can't use go/install because this requires specific ldflags to set the version
   - uses: git-checkout
     with:
       repository: https://github.com/kubernetes-csi/external-attacher
       tag: v${{package.version}}
-      expected-commit: 0ad858f55382553c41983727100c630582ed6075
-
+      expected-commit: f5243352d57f7df14d1d68d2487489860e7abbde
   - runs: |
       make build
       mkdir -p ${{targets.destdir}}/usr/bin
       install -Dm755 ./bin/csi-attacher ${{targets.destdir}}/usr/bin/csi-attacher
-
   - uses: strip
-
 update:
   enabled: true
   github:
