@@ -1,11 +1,10 @@
 package:
   name: trust-manager
-  version: 0.6.0
-  epoch: 1
+  version: 0.7.0
+  epoch: 0
   description: trust-manager is an operator for distributing trust bundles across a Kubernetes cluster.
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -14,22 +13,19 @@ environment:
       - build-base
       - go
       - ca-certificates-bundle
-
 pipeline:
   # We can't use go/install because this requires specific ldflags to set the version
   - uses: git-checkout
     with:
       repository: https://github.com/cert-manager/trust-manager
       tag: v${{package.version}}
-      expected-commit: 9bdf39df85ce523746aeedff0eacc70f887176c1
+      expected-commit: d21e83609c16eb22df75efdd28c0e36966eff939
       destination: trust-manager
-
   - runs: |
       cd trust-manager
       make build
       mkdir -p ${{targets.destdir}}/usr/bin
       install -Dm755 ./bin/trust-manager ${{targets.destdir}}/usr/bin/trust-manager
-
 update:
   enabled: true
   github:
