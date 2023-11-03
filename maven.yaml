@@ -1,11 +1,10 @@
 package:
   name: maven
-  version: 3.9.4
+  version: 3.9.5
   epoch: 0
   description: A Java project management and project comprehension tool.
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -18,15 +17,13 @@ environment:
       # using pre-built maven binaries, which `provides` a maven package at an earlier version.
       # Afterwards it depends on previous versions of this package built from source.
       - maven
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/apache/maven
       tag: maven-${{package.version}}
-      expected-commit: dfbb324ad4a7c8fb0bf182e6d91b0ae20e3d2dd9
+      expected-commit: 57804ffe001d7215b5e7bcb531cf83df38f93546
       destination: maven
-
   - runs: |
       cd maven
 
@@ -55,7 +52,6 @@ pipeline:
 
       install -m755 -Dt ${{targets.destdir}}/usr/share/java/maven/bin ./bin/mvnyjp
       ln -sf /usr/share/java/maven/bin/mvnyjp ${{targets.destdir}}/usr/bin/mvnyjp
-
 update:
   enabled: true
   github:
