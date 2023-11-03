@@ -1,6 +1,6 @@
 package:
   name: semgrep
-  version: 1.40.0
+  version: 1.47.0
   epoch: 0
   description: "Lightweight static analysis for many languages. Find bug variants with patterns that look like source code."
   copyright:
@@ -9,7 +9,6 @@ package:
     runtime:
       - python3
       - py3-semgrep
-
 environment:
   contents:
     packages:
@@ -28,14 +27,12 @@ environment:
       - py3-pip # used in make install
       - pcre-dev # linked against
       - gmp-dev # linked against
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/returntocorp/semgrep
       tag: v${{package.version}}
-      expected-commit: 1bd487790fd3b6755226982f49124291941b5334
-
+      expected-commit: 2b41173d4b3029f5dd821375dcaf224c41cc9ac8
   - runs: |
       opam init --compiler=ocaml-base-compiler.4.14.0 -y
       opam switch create 4.14.0+static ocaml-base-compiler.4.14.0
@@ -43,16 +40,13 @@ pipeline:
       make dev-setup
       make core
       make copy-core-for-cli
-
   - runs: |
       install -Dm755 _build/default/src/main/Main.exe \
         "${{targets.destdir}}"/usr/bin/osemgrep
       ln -sf /usr/bin/osemgrep "${{targets.destdir}}"/usr/bin/semgrep-core
       install -Dm644 LICENSE \
         "${{targets.destdir}}"/usr/share/licenses/${{package.name}}/LICENSE
-
   - uses: strip
-
 update:
   enabled: true
   github:
