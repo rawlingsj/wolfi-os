@@ -1,8 +1,8 @@
 package:
   name: kafka
   # When bumping check to see if the CVE mitigation can be removed.
-  version: 3.5.1
-  epoch: 1
+  version: 3.6.0
+  epoch: 0
   description: Apache Kafka is a distributed event streaming platformm
   copyright:
     - paths:
@@ -13,7 +13,6 @@ package:
     runtime:
       - bash # some helper scripts use bash
       - openjdk-11-jre
-
 environment:
   contents:
     packages:
@@ -23,14 +22,12 @@ environment:
       - gradle
       - sbt
       - openjdk-11
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/apache/kafka
       tag: ${{package.version}}
-      expected-commit: 2c6fb6c54472e90ae17439e62540ef3cb0426fe3
-
+      expected-commit: 60e845626d8a465a8cfe68bb2d7d4b88d622634e
   - runs: |
       export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
@@ -46,7 +43,6 @@ pipeline:
 
       # Clean up windows
       rm -rf ${{targets.destdir}}/usr/lib/kafka/bin/*.bat
-
 subpackages:
   - name: kafka-bitnami-compat
     description: "compat package with bitnami/kafka image"
@@ -72,7 +68,6 @@ subpackages:
 
           install -Dm755 ./bitnami/kafka/3.5/debian-11/prebuildfs/opt/bitnami/scripts/*.sh \
               "${{targets.subpkgdir}}"/opt/bitnami/scripts/
-
 update:
   enabled: true
   github:
