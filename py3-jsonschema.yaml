@@ -1,6 +1,6 @@
 package:
   name: py3-jsonschema
-  version: 4.19.0
+  version: 4.19.2
   epoch: 0
   description: "Python Classes Without Boilerplate."
   copyright:
@@ -12,7 +12,6 @@ package:
       - py3-jsonschema-specifications
       - py3-referencing
       - py3-rpds-py
-
 environment:
   contents:
     packages:
@@ -24,14 +23,12 @@ environment:
       - py3-pip
       - py3-setuptools
       - py3-wheel
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/python-jsonschema/jsonschema
       tag: v${{package.version}}
-      expected-commit: 2f5ff0b14c9ec317a64aef02898f7c44e81ec607
-
+      expected-commit: 7f003a9d4da6b1f7dc08c0428cdb372a00e1e4a4
   - runs: |
       # This is needed to work around the error "ValueError: ZIP does not support timestamps before 1980"
       export SOURCE_DATE_EPOCH=315532800
@@ -42,9 +39,7 @@ pipeline:
       python3 -m installer \
         -d "${{targets.destdir}}" \
         dist/jsonschema-${{package.version}}-py3-none-any.whl
-
   - uses: strip
-
 update:
   enabled: true
   github:
