@@ -1,34 +1,29 @@
 package:
   name: regclient
-  version: 0.5.1
-  epoch: 2
+  version: 0.5.3
+  epoch: 0
   description: Docker and OCI Registry Client in Go and tooling using those libraries
   copyright:
     - license: Apache-2.0
   dependencies:
     runtime:
       - ca-certificates-bundle
-
 environment:
   contents:
     packages:
       - ca-certificates-bundle
       - busybox
       - go
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/regclient/regclient/archive/v${{package.version}}/v${{package.version}}.tar.gz
-      expected-sha256: 27863667857ea8e40cdc2528f995e5ece9552848e466dad0da52a0a81cfb2361
-
+      expected-sha256: 2ea493c3ed6fe24416e8174e0298886cc0c05155e7258365848b7566e807bc19
   - runs: |
       CGO_ENABLED=0 go build \
         -trimpath -ldflags "-s -w -extldflags -static -buildid=" \
         -o "${{targets.destdir}}/usr/bin/regctl" ./cmd/regctl
-
   - uses: strip
-
 update:
   enabled: true
   github:
