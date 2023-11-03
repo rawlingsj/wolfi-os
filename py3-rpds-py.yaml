@@ -1,6 +1,6 @@
 package:
   name: py3-rpds-py
-  version: 0.10.3
+  version: 0.10.6
   epoch: 0
   description: "Python bindings to Rust's persistent data structures (rpds)."
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     runtime:
       - python3
-
 environment:
   contents:
     packages:
@@ -22,14 +21,12 @@ environment:
       - py3-setuptools
       - py3-wheel
       - rust
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/crate-py/rpds
       tag: v${{package.version}}
-      expected-commit: 5bda2f1462e490d70ee35e8c6384ce41458a7f3e
-
+      expected-commit: 086ba46569f47ae13db6faa12584f9bc1a09865c
   - runs: |
       python3 -m pip install -U maturin
       python3 -m gpep517 build-wheel \
@@ -40,9 +37,7 @@ pipeline:
         dist/rpds_py-${{package.version}}-*.whl
       install -Dm644 LICENSE \
         "${{targets.destdir}}"/usr/share/licenses/${{package.name}}/LICENSE
-
   - uses: strip
-
 update:
   enabled: true
   github:
