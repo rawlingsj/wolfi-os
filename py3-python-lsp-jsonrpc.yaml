@@ -1,6 +1,6 @@
 package:
   name: py3-python-lsp-jsonrpc
-  version: 1.1.1
+  version: 1.1.2
   epoch: 0
   description: "JSON RPC 2.0 server library"
   copyright:
@@ -9,7 +9,6 @@ package:
     runtime:
       - python3
       - py3-ujson
-
 environment:
   contents:
     packages:
@@ -21,14 +20,12 @@ environment:
       - py3-setuptools
       - py3-setuptools-scm
       - py3-wheel
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/python-lsp/python-lsp-jsonrpc
       tag: v${{package.version}}
-      expected-commit: 1a5ef4422266e28ac6c188f336cc7049f618616e
-
+      expected-commit: 786d8dd8f830dbd83a17962c0167183a6609e72f
   - runs: |
       python3 -m gpep517 build-wheel \
         --wheel-dir dist \
@@ -38,9 +35,7 @@ pipeline:
         dist/python_lsp_jsonrpc-${{package.version}}-*.whl
       install -Dm644 LICENSE \
         "${{targets.destdir}}"/usr/share/licenses/${{package.name}}/LICENSE
-
   - uses: strip
-
 update:
   enabled: true
   github:
