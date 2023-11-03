@@ -1,14 +1,13 @@
 package:
   name: nginx-mainline
-  version: 1.25.2
-  epoch: 2
+  version: 1.25.3
+  epoch: 0
   description: HTTP and reverse proxy server (mainline version)
   copyright:
     - license: BSD-2-Clause
   dependencies:
     provides:
       - nginx=${{package.version}}-r${{package.epoch}}
-
 environment:
   contents:
     packages:
@@ -30,7 +29,6 @@ environment:
       - zeromq-dev
       - zlib-dev
       - luajit-dev
-
 data:
   - name: modules
     items:
@@ -41,13 +39,12 @@ data:
       mail: "10"
       stream_geoip: "10"
       stream: "10"
-
 # TODO look at adding extra modules like alpine does https://git.alpinelinux.org/aports/tree/main/nginx/APKBUILD#n149
 # Also note the nginx inc config https://hg.nginx.org/pkg-oss/file/tip/alpine
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: 05dd6d9356d66a74e61035f2a42162f8c754c97cf1ba64e7a801ba158d6c0711
+      expected-sha256: 64c5b975ca287939e828303fa857d22f142b251f17808dfe41733512d9cded86
       uri: https://nginx.org/download/nginx-${{package.version}}.tar.gz
   - name: configure
     runs: |
@@ -110,7 +107,6 @@ pipeline:
       # and both access logs to stdout
       sed -i 's/#access_log.*;$/access_log  \/dev\/stdout;/' ${{targets.destdir}}/etc/nginx/nginx.conf
   - uses: strip
-
 subpackages:
   - name: nginx-mainline-package-config
     description: Config supplied in packaged nginx.org bundles at https://hg.nginx.org/pkg-oss/
@@ -134,7 +130,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/usr/share/nginx/html
           ln -sf /var/lib/nginx/html/50x.html ${{targets.subpkgdir}}/usr/share/nginx/html/50x.html
           ln -sf /var/lib/nginx/html/index.html ${{targets.subpkgdir}}/usr/share/nginx/html/index.html
-
   - range: modules
     name: nginx-mainline-mod-${{range.key}}
     description: Nginx third-party module ${{range.key}}
@@ -164,7 +159,6 @@ subpackages:
               install -m644 -D stream.conf ${{targets.subpkgdir}}/etc/nginx/stream.d/
             ;;
           esac
-
 update:
   enabled: true
   github:
