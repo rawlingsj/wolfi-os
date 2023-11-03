@@ -1,11 +1,10 @@
 package:
   name: flannel
-  version: 0.22.3
+  version: 0.23.0
   epoch: 0
   description: flannel is a network fabric for containers, designed for Kubernetes
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -13,14 +12,12 @@ environment:
       - ca-certificates-bundle
       - build-base
       - go
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/flannel-io/flannel
       tag: v${{package.version}}
-      expected-commit: 49d0dd38267a3dbf2321dd19cb0ac6856fbebba1
-
+      expected-commit: c498d00a87d394d9df16cd4fc303a8ea6d83063f
   # Build with CGO_ENABLED=1 to include the UDP backend
   - runs: |
       CGO_ENABLED=0
@@ -29,9 +26,7 @@ pipeline:
       fi
       CGO_ENABLED=$(CGO_ENABLED) go build -o "${{targets.destdir}}"/usr/bin/flanneld \
         -ldflags '-s -w -extldflags "-static" -X github.com/flannel-io/flannel/pkg/version.version=${{package.version}}'
-
   - uses: strip
-
 update:
   enabled: true
   github:
