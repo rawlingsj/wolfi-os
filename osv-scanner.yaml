@@ -1,38 +1,32 @@
 package:
   name: osv-scanner
-  version: 1.4.0
+  version: 1.4.3
   epoch: 0
   description: Vulnerability scanner written in Go which uses the data provided by https://osv.dev
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
       - ca-certificates-bundle
       - busybox
       - go
-
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: ea306347840c0c24e11061b74d0045f99179d7764e944896b9137fa49352e903
+      expected-sha256: a32daca1d28374b7f63174467bb72783b3f478aed8d260263aa88056271b7f21
       uri: https://github.com/google/osv-scanner/archive/refs/tags/v${{package.version}}.tar.gz
-
   - uses: go/build
     with:
       packages: ./cmd/osv-scanner/
       output: osv-scanner
       ldflags: -s -w
-
   - uses: go/build
     with:
       packages: ./cmd/osv-reporter/
       output: osv-reporter
       ldflags: -s -w
-
   - uses: strip
-
 update:
   enabled: true
   github:
