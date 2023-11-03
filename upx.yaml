@@ -1,11 +1,10 @@
 package:
   name: upx
-  version: 4.1.0
+  version: 4.2.1
   epoch: 0
   description: "The Ultimate Packer for eXecutables"
   copyright:
     - license: GPL-2.0
-
 environment:
   contents:
     packages:
@@ -13,17 +12,14 @@ environment:
       - build-base
       - cmake
       - samurai
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/upx/upx
-      expected-commit: 877911313161fbf86e2688e091b8fd1657985d19
+      expected-commit: d14fa5f8a410da566f61bb1ca49cb2157b54ed93
       tag: v${{package.version}}
-
   - runs: |
       git submodule update --init
-
   - uses: cmake/configure
     name: Cmake Configure
     with:
@@ -35,22 +31,17 @@ pipeline:
         -DUPX_CONFIG_DISABLE_WERROR=ON \
         -DUPX_CONFIG_DISABLE_SANITIZE=ON \
         -DUPX_CONFIG_DISABLE_GITREV=ON
-
   - uses: cmake/build
     name: Building UPX
     with:
       output-dir: build
-
   - runs: |
       ctest --test-dir build --output-on-failure
-
   - uses: cmake/install
     name: Install UPX
     with:
       output-dir: build
-
   - uses: strip
-
 subpackages:
   - name: "upx-doc"
     description: "upx documentation"
@@ -59,7 +50,6 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/share
           mv "${{targets.destdir}}"/usr/share/doc/upx "${{targets.subpkgdir}}"/usr/share
-
 update:
   enabled: true
   github:
