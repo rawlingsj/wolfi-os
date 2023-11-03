@@ -1,6 +1,6 @@
 package:
   name: py3-fonttools
-  version: 4.42.1
+  version: 4.44.0
   epoch: 0
   description: Tools to manipulate font files
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     runtime:
       - python3
-
 environment:
   contents:
     packages:
@@ -18,22 +17,17 @@ environment:
       - build-base
       - python3
       - py3-setuptools
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/fonttools/fonttools
-      expected-commit: 95e1579b3e2fd0f1a9cdb33dc7ef72d1d783e3a0
+      expected-commit: 4c647091a7dc4c5cd75a75f6391622dd121882da
       tag: ${{package.version}}
-
   - name: Python Build
     runs: python setup.py build
-
   - name: Python Install
     runs: python setup.py install --prefix=/usr --root="${{targets.destdir}}"
-
   - uses: strip
-
 update:
   enabled: true
   github:
