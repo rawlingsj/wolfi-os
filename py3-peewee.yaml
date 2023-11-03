@@ -1,6 +1,6 @@
 package:
   name: py3-peewee
-  version: 3.16.3
+  version: 3.17.0
   epoch: 0
   description: "a little orm"
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     runtime:
       - python3
-
 environment:
   contents:
     packages:
@@ -19,14 +18,12 @@ environment:
       - py3-setuptools
       - py3-gpep517
       - py3-wheel
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/coleifer/peewee
       tag: ${{package.version}}
-      expected-commit: 0d82aa9cf11327584d15a3892a7a435b50a00f9d
-
+      expected-commit: 01b2d94a4029858b9d2b1bee6fac40eed27ad9ad
   - runs: |
       NO_SQLITE=1 python3 -m gpep517 build-wheel \
         --wheel-dir dist \
@@ -36,9 +33,7 @@ pipeline:
         dist/peewee-${{package.version}}-*.whl
       install -Dm644 LICENSE \
         "${{targets.destdir}}"/usr/share/licenses/${{package.name}}/LICENSE
-
   - uses: strip
-
 update:
   enabled: true
   github:
