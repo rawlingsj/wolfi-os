@@ -1,11 +1,10 @@
 package:
   name: tailscale
-  version: 1.48.2
+  version: 1.52.1
   epoch: 0
   description: The easiest, most secure way to use WireGuard and 2FA.
   copyright:
     - license: BSD-3-Clause
-
 environment:
   contents:
     packages:
@@ -14,24 +13,19 @@ environment:
       - go
       - curl
       - bash
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/tailscale/tailscale
       tag: v${{package.version}}
-      expected-commit: ab970fe55dcaa38fe9675a948b3c103929d6347e
-
+      expected-commit: 16c59d2294cadfcfa84e6e9d035a93e535538b42
   - runs: |
       ./build_dist.sh tailscale.com/cmd/tailscale
       ./build_dist.sh tailscale.com/cmd/tailscaled
-
   - runs: |
       install -Dm755 ${{package.name}} ${{targets.destdir}}/usr/bin/tailscale
       install -Dm755 ${{package.name}}d ${{targets.destdir}}/usr/sbin/tailscaled
-
   - uses: strip
-
 update:
   enabled: true
   github:
