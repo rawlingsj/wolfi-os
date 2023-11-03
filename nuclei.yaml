@@ -1,24 +1,20 @@
 package:
   name: nuclei
-  version: 2.9.15
+  version: 3.0.3
   epoch: 0
   description: "yaml based vulnerability scanner"
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
       - go
-
 pipeline:
   - uses: go/install
     with:
       package: github.com/projectdiscovery/nuclei/v2/cmd/nuclei
       version: v${{package.version}}
-
   - uses: strip
-
 update:
   enabled: true
   github:
