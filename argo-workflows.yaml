@@ -1,11 +1,10 @@
 package:
   name: argo-workflows
-  version: 3.4.11
+  version: 3.5.0
   epoch: 0
   description: Workflow engine for Kubernetes.
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -16,14 +15,12 @@ environment:
       - openssl
       - nodejs-20
       - yarn
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/argoproj/argo-workflows
       tag: v${{package.version}}
-      expected-commit: ee939bbd2d8950a2fa1badd7cfad3b88c039da26
-
+      expected-commit: bf735a2e861d6b1c686dd4a076afc3468aa89c4a
   - runs: |
       # NODE_OPTIONS has to been set
       sed -i 's/NODE_OPTIONS='\''[^'\'']*'\''/NODE_OPTIONS='\''--openssl-legacy-provider'\''/g' ui/package.json
@@ -41,9 +38,7 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/usr/bin
       mv dist/argo ${{targets.destdir}}/usr/bin/
-
   - uses: strip
-
 subpackages:
   - name: "argo-workflows-known-hosts"
     description: "known hosts file for argo workflows"
@@ -52,7 +47,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/etc/ssh
           cp hack/ssh_known_hosts ${{targets.subpkgdir}}/etc/ssh/
       - uses: strip
-
   - name: "argo-workflow-controller"
     description: "Argo workflow controller"
     pipeline:
@@ -60,7 +54,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/usr/bin/
           mv dist/workflow-controller ${{targets.subpkgdir}}/usr/bin/
       - uses: strip
-
   - name: "argo-workflow-executor"
     description: "Argo workflow executor"
     pipeline:
@@ -68,7 +61,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/usr/bin/
           mv dist/argoexec ${{targets.subpkgdir}}/usr/bin/
       - uses: strip
-
   - name: argo-workflow-controller-compat
     pipeline:
       - runs: |
@@ -78,7 +70,6 @@ subpackages:
     dependencies:
       runtime:
         - argo-workflow-controller
-
   - name: argo-workflow-executor-compat
     pipeline:
       - runs: |
@@ -88,7 +79,6 @@ subpackages:
     dependencies:
       runtime:
         - argo-workflow-executor
-
   - name: argo-workflow-cli
     pipeline:
       - runs: |
@@ -99,7 +89,6 @@ subpackages:
     dependencies:
       runtime:
         - argo-workflows
-
 update:
   enabled: true
   github:
