@@ -1,6 +1,6 @@
 package:
   name: py3-importlib-resources
-  version: 6.0.1
+  version: 6.1.0
   epoch: 0
   description: Read resources from Python packages
   copyright:
@@ -9,7 +9,6 @@ package:
     runtime:
       - py3-zipp
       - python3
-
 environment:
   contents:
     packages:
@@ -21,14 +20,12 @@ environment:
       - py3-gpep517
       - python3
       - py3-setuptools
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/python/importlib_resources
       tag: v${{package.version}}
-      expected-commit: e8ba13d4f8eb977800dab7bf6582adad71c558e0
-
+      expected-commit: babc28763cd8e4f6fc4d6d67136ff51fb9182069
   - name: Python Build
     runs: |
       export SETUPTOOLS_SCM_PRETEND_VERSION=${{package.version}}
@@ -38,9 +35,7 @@ pipeline:
 
        python3 -m installer -d "${{targets.destdir}}" \
        dist/*.whl
-
   - uses: strip
-
 update:
   enabled: true
   github:
