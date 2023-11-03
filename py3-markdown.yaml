@@ -1,6 +1,6 @@
 package:
   name: py3-markdown
-  version: 3.4.4
+  version: 3.5.1
   epoch: 0
   description: Python implementation of John Gruber's Markdown.
   copyright:
@@ -9,7 +9,6 @@ package:
     runtime:
       - py3-importlib-metadata
       - python-3
-
 environment:
   contents:
     packages:
@@ -19,19 +18,15 @@ environment:
       - build-base
       - python-3
       - py3-setuptools
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/Python-Markdown/markdown
       tag: ${{package.version}}
-      expected-commit: f99f176d248d0e472b0960d06a7aaf649bb1da25
-
+      expected-commit: 2932f183921943687ca3d72b3908a937bd495d24
   - name: Python Build
     uses: python/build-wheel
-
   - uses: strip
-
 update:
   enabled: true
   ignore-regex-patterns:
