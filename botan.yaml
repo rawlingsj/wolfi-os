@@ -1,11 +1,10 @@
 package:
   name: botan
-  version: 3.1.1
+  version: 3.2.0
   epoch: 0
   description: "Cryptography Toolkit"
   copyright:
     - license: BSD-2-Clause
-
 environment:
   contents:
     packages:
@@ -19,14 +18,12 @@ environment:
       - sqlite-dev
       - ca-certificates-bundle
       - build-base
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/randombit/botan
-      expected-commit: f60608b8818c7bb8579fe797122ed6116f4134af
+      expected-commit: 6f466a2704a31856ebc27451ca861527d3dd00a1
       tag: ${{package.version}}
-
   - name: Configure and build
     runs: |
       python3 ./configure.py \
@@ -39,18 +36,13 @@ pipeline:
         --with-zlib \
         --with-os-feature=getrandom \
         --disable-static
-
   - uses: autoconf/make
-
   - uses: autoconf/make-install
-
   - uses: strip
-
 subpackages:
   - name: botan-dev
     pipeline:
       - uses: split/dev
-
 update:
   enabled: true
   github:
