@@ -1,6 +1,6 @@
 package:
   name: py3-scipy
-  version: 1.11.2
+  version: 1.11.3
   epoch: 0
   description: Fundamental algorithms for scientific computing in Python
   copyright:
@@ -9,7 +9,6 @@ package:
     runtime:
       - numpy
       - python3
-
 environment:
   contents:
     packages:
@@ -28,24 +27,18 @@ environment:
       - py3-pythran
       - gfortran
       - f2py
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/scipy/scipy
-      expected-commit: 686422c4f0a71be1b4258309590fd3e9de102e18
+      expected-commit: f990b1d2471748c79bc4260baf8923db0a5248af
       tag: v${{package.version}}
-
   - runs: git submodule update --init
-
   - name: Python Build
     runs: python _setup.py build
-
   - name: Python Install
     runs: python _setup.py install --prefix=/usr --root="${{targets.destdir}}"
-
   - uses: strip
-
 update:
   enabled: true
   github:
