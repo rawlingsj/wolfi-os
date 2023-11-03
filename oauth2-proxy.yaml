@@ -1,11 +1,10 @@
 package:
   name: oauth2-proxy
-  version: 7.5.0
-  epoch: 1
+  version: 7.5.1
+  epoch: 0
   description: Reverse proxy and static file server that provides authentication using various providers to validate accounts by email, domain or group.
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -15,13 +14,11 @@ environment:
       - go
       - openssl
       - ca-certificates-bundle
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/oauth2-proxy/oauth2-proxy/archive/refs/tags/v${{package.version}}.tar.gz
-      expected-sha256: d31206ca1eff121d4560e84a652a55efd0a8a01bf7fbcd30d524f0e4676cd75c
-
+      expected-sha256: 97de086ba98ce884da77d4031537f72496a059d14c60977c46824c24010096c8
   - uses: go/build
     with:
       packages: .
@@ -29,16 +26,13 @@ pipeline:
       ldflags: -s -w -X github.com/oauth2-proxy/oauth2-proxy/v7/pkg/version.Version=${{package.version}}
       # GHSA-vvpx-j8f3-3w6h
       deps: golang.org/x/net@v0.7.0
-
   - runs: |
       # Make sure there is at least an empty key file.
       # This is useful for GCP App Engine custom runtime builds, because you cannot use multiline variables in their app.yaml, so you have to build the
       # key into the container and then tell it where it is by setting OAUTH2_PROXY_JWT_KEY_FILE=/etc/ssl/private/jwt_signing_key.pem in app.yaml instead.
       mkdir -p "${{targets.destdir}}/etc/ssl/private/"
       touch "${{targets.destdir}}/etc/ssl/private/jwt_signing_key.pem"
-
   - uses: strip
-
 update:
   enabled: true
   github:
