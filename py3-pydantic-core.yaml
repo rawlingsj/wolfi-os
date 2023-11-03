@@ -1,7 +1,7 @@
 # Generated from https://pypi.org/project/pydantic-core/
 package:
   name: py3-pydantic-core
-  version: 2.8.0
+  version: 2.11.0
   epoch: 0
   copyright:
     - license: MIT
@@ -9,7 +9,6 @@ package:
     runtime:
       - py3-typing-extensions
       - python3
-
 environment:
   contents:
     packages:
@@ -22,19 +21,15 @@ environment:
       - py3-build
       - py3-installer
       - rust
-
 pipeline:
   - uses: git-checkout
     with:
-      expected-commit: a17e9b632eb25e67a0b668a33cfd6dc79b6392db
+      expected-commit: f8470df75b62c061caf5c5c09e26c5d2ac94aa8d
       repository: https://github.com/pydantic/pydantic-core
       tag: v${{package.version}}
-
   - name: Python Build
     uses: python/build-wheel
-
   - uses: strip
-
 update:
   enabled: true
   github:
