@@ -1,6 +1,6 @@
 package:
   name: py3-google-auth
-  version: 2.23.0
+  version: 2.23.4
   epoch: 0
   description: Google Authentication Library
   copyright:
@@ -13,7 +13,6 @@ package:
       - py3-six
       - py3-urllib3
       - python3
-
 environment:
   contents:
     packages:
@@ -23,22 +22,17 @@ environment:
       - build-base
       - python3
       - py3-setuptools
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/googleapis/google-auth-library-python
       tag: v${{package.version}}
-      expected-commit: 432e8a508d85e3f801dc81ccaf2d1d668fdcf2b7
-
+      expected-commit: beaaf195610136bda43793640549207048e4b3e3
   - name: Python Build
     runs: python setup.py build
-
   - name: Python Install
     runs: python setup.py install --prefix=/usr --root="${{targets.destdir}}"
-
   - uses: strip
-
 update:
   enabled: true
   github:
