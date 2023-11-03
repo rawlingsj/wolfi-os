@@ -1,11 +1,10 @@
 package:
   name: aerospike
-  version: 6.4.0.2
+  version: 6.4.0.6
   epoch: 0
   description: Aerospike Database Server - flash-optimized, in-memory, nosql database
   copyright:
     - license: AGPL-3.0-only
-
 environment:
   contents:
     packages:
@@ -21,16 +20,13 @@ environment:
       - cmake
       - gmp-dev
       - coreutils
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/aerospike/aerospike-server
       tag: ${{package.version}}
-      expected-commit: 339b5bfe34cc3119c0a03040a726c661dbd508d2
-
+      expected-commit: f28b0180f58f81d1b02643aa2ed4c95f69a4a38c
   - runs: git submodule update --init
-
   - runs: |
       # There's some OS detection that doesn't know about wolfi and gets the wrong path
       sed -i 's|ABSL_LIB_DIR = $(ABSL)/installation/lib$|ABSL_LIB_DIR = $(ABSL)/installation/lib64|g' make_in/Makefile.vars
@@ -39,21 +35,18 @@ pipeline:
       sed -i 's|COMMON_CFLAGS += -Wno-address-of-packed-member|COMMON_CFLAGS += -Wno-address-of-packed-member -Wno-use-after-free|g' make_in/Makefile.in
 
       git diff
-
   - runs: |
       export CFLAGS="-Wno-address-of-packed-member -Wno-use-after-free"
       export CXXFLAGS="$CFLAGS"
       export CPPFLAGS="$CFLAGS"
       make -j$(nproc)
       make tar
-
   - runs: |
       mkdir -p ${{targets.destdir}}/usr/bin ${{targets.destdir}}/usr/share
       tar -C ${{targets.destdir}}/usr/share -xf pkg/packages/aerospike-server-community-${{package.version}}.tar.gz
 
       ln -sf /usr/share/aerospike/bin/asd ${{targets.destdir}}/usr/bin/asd
       ln -sf /usr/share/aerospike/bin/aerospike ${{targets.destdir}}/usr/bin/aerospike
-
 update:
   enabled: true
   github:
