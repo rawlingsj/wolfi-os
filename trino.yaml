@@ -1,6 +1,6 @@
 package:
   name: trino
-  version: "426"
+  version: "432"
   epoch: 0
   description: Official repository of Trino, the distributed SQL query engine for big data, formerly known as PrestoSQL
   copyright:
@@ -10,7 +10,6 @@ package:
       - bash # some helper scripts use bash
       - openjdk-17-default-jvm
       - python3 # required by trino launcher script
-
 environment:
   contents:
     packages:
@@ -24,14 +23,12 @@ environment:
       - git
       - rsync
       - jvmkill
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/trinodb/trino.git
       tag: ${{package.version}}
-      expected-commit: 47f9fa50e1172699643fbbdb57f6fd7570c053d0
-
+      expected-commit: 4ca25b49b83095cc2a19ffe31386cf0175df2466
   - runs: |
       export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
       export LANG=en_US.UTF-8
@@ -82,7 +79,6 @@ pipeline:
       trino soft nproc 128000
       trino hard nproc 128000
       EOF
-
 data:
   - name: plugins
     items:
@@ -133,7 +129,6 @@ data:
       thrift: thrift
       tpcds: tpcds
       tpch: tpch
-
 subpackages:
   - range: plugins
     name: trino-plugin-${{range.key}}
@@ -146,7 +141,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/usr/lib/trino/plugin/${{range.value}}
           cd /home/build/plugins/optional/
           cp -R ./${{range.value}}/* ${{targets.subpkgdir}}/usr/lib/trino/plugin/${{range.value}}/
-
 update:
   enabled: true
   github:
