@@ -1,24 +1,21 @@
 package:
   name: caddy
-  version: 2.7.4
-  epoch: 2
+  version: 2.7.5
+  epoch: 0
   description: Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
       - busybox
       - ca-certificates-bundle
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/caddyserver/caddy
       tag: v${{package.version}}
-      expected-commit: f11c3c9f5a1be082450d64369853e1dacda22dde
-
+      expected-commit: 0e204b730aa2b1fa0835336b1117eff8c420f713
   # TODO: Add support for plugins
   - uses: go/build
     with:
@@ -26,9 +23,7 @@ pipeline:
       packages: ./cmd/caddy
       output: caddy
       ldflags: -s -w
-
   - uses: strip
-
 subpackages:
   - name: caddy-man
     description: caddy manpages
@@ -36,7 +31,6 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/share
           "${{targets.destdir}}"/usr/bin/caddy manpage --directory "${{targets.subpkgdir}}"/usr/share/
-
 update:
   enabled: true
   github:
