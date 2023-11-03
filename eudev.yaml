@@ -1,11 +1,10 @@
 package:
   name: eudev
-  version: 3.2.12 # When bumping this, also bump the provides below!
+  version: 3.2.14 # When bumping this, also bump the provides below!
   epoch: 0
   description: init system agnostic fork of systemd-udev
   copyright:
     - license: GPL-2.0-only
-
 environment:
   contents:
     packages:
@@ -23,13 +22,11 @@ environment:
       - openssl-dev
       - xz-dev
       - tree
-
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: ccdd64ec3c381d3c3ed0e99d2e70d1f62988c7763de89ca7bdffafa5eacb9ad8
+      expected-sha256: 8da4319102f24abbf7fff5ce9c416af848df163b29590e666d334cc1927f006f
       uri: https://github.com/eudev-project/eudev/releases/download/v${{package.version}}/eudev-${{package.version}}.tar.gz
-
   - uses: autoconf/configure
     with:
       opts: |
@@ -37,19 +34,12 @@ pipeline:
         --enable-split-usr \
         --enable-manpages \
         --enable-kmod
-
   - uses: autoconf/make
-
   - uses: autoconf/make-install
-
   - uses: strip
-
   - runs: tree
-
   - runs: echo ok
-
   - runs: tree ${{targets.destdir}}
-
 subpackages:
   - name: eudev-dev
     pipeline:
@@ -58,19 +48,16 @@ subpackages:
       runtime:
         - eudev
     description: eudev dev
-
   - name: eudev-doc
     pipeline:
       - uses: split/manpages
     description: eudev manpages
-
   - name: eudev-libs
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/lib
           mv ${{targets.destdir}}/usr/lib/libudev.so.*  ${{targets.subpkgdir}}/usr/lib/
     description: Dynamic library to access udev device information
-
   - name: eudev-netifnames
     pipeline:
       - runs: |
@@ -78,7 +65,6 @@ subpackages:
           mv ${{targets.destdir}}/usr/lib/udev/rules.d/80-net-name-slot.rules \
            ${{targets.subpkgdir}}/usr/lib/udev/rules.d/
     description: udev rules for systemd-style interface names
-
   - name: eudev-hwids
     dependencies:
       provides:
@@ -88,7 +74,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/etc/udev/hwdb.d
           mv ${{targets.destdir}}/etc/udev/hwdb.d/* ${{targets.subpkgdir}}/etc/udev/hwdb.d/
     description: Hardware identification databases (from eudev)
-
 update:
   enabled: true
   github:
