@@ -1,11 +1,10 @@
 package:
   name: neon
-  version: "3940"
+  version: "4108"
   epoch: 0
   description: "Serverless Postgres. We separated storage and compute to offer autoscaling, branching, and bottomless storage."
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -36,14 +35,12 @@ environment:
       - protobuf-dev
       - icu
       - icu-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/neondatabase/neon
       tag: release-${{package.version}}
-      expected-commit: 52a88af0aaa5b38e9cd881b45599a25feb19c199
-
+      expected-commit: cf28e5922a4412ccb944c9065fcab6f2060f01fe
   - runs: |
       git submodule update --init --recursive
 
@@ -60,9 +57,7 @@ pipeline:
       mkdir -p "${{targets.destdir}}"/usr/libexec/neon
       mv pg_install/v14 "${{targets.destdir}}"/usr/libexec/neon/v14
       mv pg_install/v15 "${{targets.destdir}}"/usr/libexec/neon/v15
-
   - uses: strip
-
 update:
   enabled: true
   github:
