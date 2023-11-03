@@ -1,11 +1,10 @@
 package:
   name: bazel-3
-  version: 3.7.2
+  version: 6.3.2
   epoch: 0
   description: Bazel is an open-source build and test tool
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -22,16 +21,13 @@ environment:
       - protobuf
       - linux-headers
       - coreutils
-
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: de255bb42163a915312df9f4b86e5b874b46d9e8d4b72604b5123c3a845ed9b1
+      expected-sha256: 8cd7feac58193be2bcba451ba6688a46824d37ca6359ff58e0d44eb98f042948
       uri: https://github.com/bazelbuild/bazel/releases/download/${{package.version}}/bazel-${{package.version}}-dist.zip
       extract: false
-
   - runs: unzip -o bazel-${{package.version}}-dist.zip
-
   - runs: |
       mkdir -p $HOME/.cache/bazel/_bazel_root
       export JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
@@ -52,7 +48,6 @@ pipeline:
       --prepend=scripts/bazel-complete-template.bash
 
       echo startup --server_javabase=$JAVA_HOME >> ./scripts/packages/bazel.bazelrc
-
   - runs: |
       install -Dm755 ./scripts/packages/bazel.sh "${{targets.destdir}}"/usr/bin/bazel
       install -Dm755 ./output/bazel "${{targets.destdir}}"/usr/bin/bazel-real
@@ -65,7 +60,6 @@ pipeline:
       mkdir -p "${{targets.destdir}}"/usr/share/zsh/site-functions
       mv scripts/zsh_completion/_bazel \
       		"${{targets.destdir}}"/usr/share/zsh/site-functions/_bazel
-
 update:
   enabled: true
   github:
