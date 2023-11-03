@@ -1,11 +1,10 @@
 package:
   name: py3-tkinter
-  version: 3.11.5
+  version: 3.11.6
   epoch: 0
   description: A graphical user interface for the Python programming language
   copyright:
     - license: SF-2.0
-
 environment:
   contents:
     packages:
@@ -28,13 +27,11 @@ environment:
       - xz-dev
       - zlib-dev
       - libx11-dev
-
 pipeline:
   - uses: fetch
     with:
       uri: https://www.python.org/ftp/python/${{package.version}}/Python-${{package.version}}.tar.xz
-      expected-sha256: 85cd12e9cf1d6d5a45f17f7afe1cebe7ee628d3282281c492e86adf636defa3f
-
+      expected-sha256: 0fab78fa7f133f4f38210c6260d90d7c0d5c7198446419ce057ec7ac2e6f5f38
   - runs: |
       export CFLAGS="${CFLAGS/-Os/} -fno-semantic-interposition"
       export LDFLAGS="$LDFLAGS -fno-semantic-interposition"
@@ -51,7 +48,6 @@ pipeline:
       	--with-system-ffi
 
         make EXTRA_CFLAGS="$CFLAGS -DTHREAD_STACK_SIZE=0x100000"
-
   - runs: |
       pkgver=${{package.version}}
       _basever="${pkgver%.*}"
@@ -67,9 +63,7 @@ pipeline:
       "${{targets.destdir}}"/usr/lib/python$_basever/lib-dynload/
       mv ./tmpinstall/usr/bin/idle* \
       	"${{targets.destdir}}"/usr/bin/
-
   - uses: strip
-
 update:
   enabled: true
   shared: true
