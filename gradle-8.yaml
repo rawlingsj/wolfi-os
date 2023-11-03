@@ -1,6 +1,6 @@
 package:
   name: gradle-8
-  version: 8.3.0 # When bumping version, also bump the provides below!
+  version: 8.4.0 # When bumping version, also bump the provides below!
   # For version upgrades check whether patches are still needed.
   # Upstream changes are being tracked in https://github.com/gradle/gradle/issues/25945
   epoch: 0
@@ -10,7 +10,6 @@ package:
   dependencies:
     provides:
       - gradle=8.3.0
-
 environment:
   contents:
     packages:
@@ -29,18 +28,15 @@ environment:
       # using pre-built gradle binaries, which `provides` a gradle package at an earlier version.
       # Afterwards it depends on previous versions of this package built from source.
       - openjdk-11
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/gradle/gradle
       tag: v${{package.version}}
-      expected-commit: 8afbf24b469158b714b36e84c6f4d4976c86fcd5
-
+      expected-commit: e9251e572c9bd1d01e503a0dfdf43aedaeecdc3f
   - uses: patch
     with:
       patches: 0001-PATCH-override-Guava-version.patch
-
   - runs: |
       export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 
@@ -58,7 +54,6 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/usr/bin
       ln -sf /usr/share/java/gradle/bin/gradle ${{targets.destdir}}/usr/bin/gradle
-
 update:
   enabled: true
   ignore-regex-patterns:
