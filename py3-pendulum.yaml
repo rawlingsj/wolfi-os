@@ -1,6 +1,6 @@
 package:
   name: py3-pendulum
-  version: 2.1.2
+  version: 3.0.0b1
   epoch: 0
   description: Python datetimes made easy
   copyright:
@@ -11,7 +11,6 @@ package:
       - py3-typing
       - py3-pytzdata
       - python3
-
 environment:
   contents:
     repositories:
@@ -27,17 +26,14 @@ environment:
       - python3
       - py3-setuptools
       - py3-pip
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/sdispater/pendulum
       tag: ${{package.version}}
-      expected-commit: d9aa101fe76852b75cba14d686ede923641c5b4d
-
+      expected-commit: 1194e7b937dd6bb1058d6930569cba475cfc48ae
   - name: Python Build
     runs: python build.py build
-
   - runs: |
       export SETUPTOOLS_SCM_PRETEND_VERSION=${{package.version}}
       pip install -U poetry
@@ -47,9 +43,7 @@ pipeline:
 
        python3 -m installer -d "${{targets.destdir}}" \
        dist/*.whl
-
   - uses: strip
-
 update:
   enabled: true
   github:
