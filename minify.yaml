@@ -1,11 +1,10 @@
 package:
   name: minify
-  version: 2.12.9
-  epoch: 1
+  version: 2.20.6
+  epoch: 0
   description: "Go minifiers for web formats"
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -13,22 +12,18 @@ environment:
       - busybox
       - ca-certificates-bundle
       - go
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/tdewolff/minify
       tag: v${{package.version}}
-      expected-commit: d979084f173570a86ea0319fa30651da6275bcc2
-
+      expected-commit: 036acf01a364ca8e0acb0445f444c70b6c06dc8c
   - uses: go/build
     with:
       packages: ./cmd/minify
       ldflags: -s -w
       output: minify
-
   - uses: strip
-
 subpackages:
   - name: minify-bash-completion
     description: bash completion for minify
@@ -40,7 +35,6 @@ subpackages:
     dependencies:
       runtime:
         - minify
-
 update:
   enabled: true
   github:
