@@ -1,11 +1,10 @@
 package:
   name: newrelic-infra-operator
-  version: 0.11.0
+  version: 0.12.0
   epoch: 0
   description: Newrelic kubernetes operator of infrastructure
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -13,21 +12,17 @@ environment:
       - busybox
       - go
       - build-base
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/newrelic/newrelic-infra-operator
       tag: v${{package.version}}
-      expected-commit: cd04072d92da9f9803630ba0fa56dfec231fe8c3
-
+      expected-commit: bb9ad058535ce20c5fd018b34ad4df68ed1d58c1
   - runs: |
       make build
       mkdir -p ${{targets.destdir}}/usr/bin
       mv newrelic-infra-operator ${{targets.destdir}}/usr/bin/newrelic-infra-operator
-
   - uses: strip
-
 update:
   enabled: true
   github:
