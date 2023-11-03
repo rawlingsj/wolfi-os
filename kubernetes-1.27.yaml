@@ -1,6 +1,6 @@
 package:
   name: kubernetes-1.27
-  version: 1.27.6
+  version: 1.27.7
   epoch: 0
   description: Production-Grade Container Scheduling and Management
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     provides:
       - kubernetes=1.27
-
 environment:
   contents:
     packages:
@@ -25,30 +24,25 @@ environment:
       - findutils # needed for non busybox version of `xargs`
       - rsync
       - libcap-utils
-
 # "transform" the kubernetes version into the corresponding pause version, these don't always line up
 var-transforms:
   - from: ${{package.version}}
     match: ^(.+)$
     replace: 3.9
     to: pause-version
-
 vars:
   components: "kubectl kubeadm kubelet kube-scheduler kube-proxy kube-controller-manager kube-apiserver"
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/kubernetes/kubernetes
       tag: v${{package.version}}
-      expected-commit: 741c8db18a52787d734cbe4795f0b4ad860906d6
-
+      expected-commit: 07a61d861519c45ef5c89bc22dda289328f29343
   - runs: |
       # Mitigate GHSA-hqxw-f8mx-cpmw / CVE-2023-2253
       ./hack/pin-dependency.sh github.com/docker/distribution v2.8.2
       ./hack/update-vendor.sh
       ./hack/lint-dependencies.sh
-
   - runs: |
       export FORCE_HOST_GO=true
 
@@ -58,18 +52,15 @@ pipeline:
       done
 
       make WHAT="$WHAT"
-
   - runs: |
       # We apply cap_net_bind_service so that kube-apiserver can be run as
       # non-root and still listen on port less than 1024
       setcap cap_net_bind_service=+ep _output/bin/kube-apiserver
-
   - runs: |
       mkdir -p "${{targets.destdir}}"/usr/bin/
       install -m755 _output/bin/* ${{targets.destdir}}/usr/bin/
 
       mkdir -p "${{targets.destdir}}"/etc/kubernetes
-
 subpackages:
   - name: kubectl-1.27
     description: A command line tool for communicating with a Kubernetes API server
@@ -80,7 +71,6 @@ subpackages:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           install -m755 _output/bin/kubectl ${{targets.subpkgdir}}/usr/bin/kubectl-1.27
-
   - name: kubectl-bash-completion-1.27
     dependencies:
       runtime:
@@ -89,7 +79,6 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/share/bash-completion/completions
           _output/bin/kubectl completion bash > "${{targets.subpkgdir}}"/usr/share/bash-completion/completions/kubectl-1.27
-
   - name: kubeadm-1.27
     description: A tool for quickly installing Kubernetes and setting up a secure cluster
     dependencies:
@@ -108,7 +97,6 @@ subpackages:
 
           mkdir -p "${{targets.subpkgdir}}"/usr/share/bash-completion/completions
           _output/bin/kubeadm completion bash > "${{targets.subpkgdir}}"/usr/share/bash-completion/completions/kubeadm
-
   - name: kubelet-1.27
     description: An agent that runs on each node in a Kubernetes cluster making sure that containers are running in a Pod
     dependencies:
@@ -123,7 +111,6 @@ subpackages:
 
           install -d ${{targets.subpkgdir}}/var/lib/kubelet
           install -d ${{targets.subpkgdir}}/var/log/kubelet
-
   - name: kube-scheduler-1.27
     description: Kubernetes control plane component watching over pods on nodes
     dependencies:
@@ -135,7 +122,6 @@ subpackages:
           install -m755 _output/bin/kube-scheduler ${{targets.subpkgdir}}/usr/bin/kube-scheduler-1.27
 
           install -d ${{targets.subpkgdir}}/var/log/kube-scheduler
-
   - name: kube-proxy-1.27
     description: Kubernetes network proxy that runs on each node
     dependencies:
@@ -148,7 +134,6 @@ subpackages:
 
           install -d ${{targets.subpkgdir}}/var/lib/kube-proxy
           install -d ${{targets.subpkgdir}}/var/log/kube-proxy
-
   - name: kube-controller-manager-1.27
     description: Kubernetes control plane component that runs controller processes
     dependencies:
@@ -160,7 +145,6 @@ subpackages:
           install -m755 _output/bin/kube-controller-manager ${{targets.subpkgdir}}/usr/bin/kube-controller-manager-1.27
 
           install -d ${{targets.subpkgdir}}/var/log/kube-controller-manager
-
   - name: kube-apiserver-1.27
     description: Kubernetes control plane component exposing the Kubernetes API
     dependencies:
@@ -172,7 +156,6 @@ subpackages:
           install -m755 _output/bin/kube-apiserver ${{targets.subpkgdir}}/usr/bin/kube-apiserver-1.27
 
           install -d ${{targets.subpkgdir}}/var/log/kube-apiserver
-
   - name: kubernetes-pause-3.9
     description: ""
     dependencies:
@@ -184,7 +167,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/usr/bin/
           CFLAGS="$CFLAGS -static -DVERSION=${{vars.pause-version}}-${{package.version}}"
           gcc -o "${{targets.subpkgdir}}"/usr/bin/pause-3.9 linux/pause.c
-
   - range: components
     name: "${{range.key}}-1.27-default"
     description: "Makes this version of ${{range.key}} the default."
@@ -197,7 +179,6 @@ subpackages:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           ln -s ${{range.key}}-1.27 ${{targets.subpkgdir}}/usr/bin/${{range.key}}
-
   - name: kubernetes-1.27-default
     description: "Compatibility package to set 1.27 as the default kubernetes, and add packages to their shortened path"
     dependencies:
@@ -209,7 +190,6 @@ subpackages:
         - kube-proxy-1.27-default
         - kube-controller-manager-1.27-default
         - kube-apiserver-1.27-default
-
 data:
   - name: components
     items:
@@ -221,7 +201,6 @@ data:
       kube-proxy:
       kube-controller-manager:
       kube-apiserver:
-
 update:
   enabled: true
   github:
