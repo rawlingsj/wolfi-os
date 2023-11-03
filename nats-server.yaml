@@ -1,11 +1,10 @@
 package:
   name: nats-server
-  version: 2.10.0
+  version: 2.10.4
   epoch: 0
   description: High-Performance server for NATS.io, the cloud and edge native messaging system.
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -13,15 +12,13 @@ environment:
       - busybox
       - go
       - ca-certificates-bundle
-
 pipeline:
   # We can't use go/install because this requires a specific go version
   - uses: git-checkout
     with:
       repository: https://github.com/nats-io/nats-server
       tag: v${{package.version}}
-      expected-commit: 77e198333fb2b25029b620fae3574b328de37f89
-
+      expected-commit: abc47f751933f6523fc7ec956d2a697b6157c3f7
   - runs: |
       mkdir -p ${{targets.destdir}}/usr/bin
       mkdir -p ${{targets.destdir}}/etc/nats
@@ -30,7 +27,6 @@ pipeline:
         -o ${{targets.destdir}}/usr/bin/nats-server \
         .
       mv docker/nats-server.conf ${{targets.destdir}}/etc/nats/nats-server.conf
-
 update:
   enabled: true
   github:
