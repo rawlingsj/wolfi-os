@@ -1,11 +1,10 @@
 package:
   name: fluent-bit
-  version: 2.1.9
+  version: 2.1.10
   epoch: 0
   description: Fast and Lightweight Log processor and forwarder
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -25,14 +24,12 @@ environment:
       - zlib-dev
       - dpkg
       - systemd-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/fluent/fluent-bit
-      expected-commit: c625ad7ea41123ad14f433fb569c5106645b6e82
+      expected-commit: b19e9ce674de872640c00a697fa545b66df0628a
       tag: v${{package.version}}
-
   - runs: |
       cd build
       cmake -DFLB_RELEASE=On \
@@ -50,10 +47,8 @@ pipeline:
         -DFLB_CHUNK_TRACE=On \
       ..
       make
-
   - runs: |
       make -C build DESTDIR="${{targets.destdir}}" install
-
   - runs: |
       mkdir -p "${{targets.destdir}}"/fluent-bit/etc
       mv "${{targets.destdir}}"/usr/etc/fluent-bit/* "${{targets.destdir}}"/fluent-bit/etc
@@ -70,9 +65,7 @@ pipeline:
         conf/parsers_cinder.conf \
         conf/plugins.conf \
         "${{targets.destdir}}"/fluent-bit/etc
-
   - uses: strip
-
 subpackages:
   - name: fluent-bit-dev
     pipeline:
@@ -81,7 +74,6 @@ subpackages:
       runtime:
         - fluent-bit
     description: fluent-bit dev
-
 update:
   enabled: true
   github:
