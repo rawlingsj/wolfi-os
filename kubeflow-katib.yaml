@@ -1,11 +1,10 @@
 package:
   name: kubeflow-katib
-  epoch: 3
-  version: 0.15.0
+  epoch: 0
+  version: 0.16.0
   description: Kubeflow Katib services
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -17,7 +16,6 @@ environment:
       - py3.10-pip
       - gfortran
       - pcre-dev
-
 data:
   - name: go-builds
     items:
@@ -26,18 +24,15 @@ data:
       db-manager: db-manager/v1beta1
       file-metricscollector: metricscollector/v1beta1/file-metricscollector
       suggestion-goptuna: suggestion/goptuna/v1beta1
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/kubeflow/katib
-      expected-commit: 05ab6f012ab6723609700a47a6cfa1845080e9b6
+      expected-commit: fc6beec8358f1c4a50d86de63c5906fce2eba373
       tag: v${{package.version}}
-
   - uses: patch
     with:
       patches: bump_requirements.patch
-
 subpackages:
   - range: go-builds
     name: "katib-${{range.key}}"
@@ -50,7 +45,6 @@ subpackages:
           ldflags: -X main.version=${{package.version}}
           subpackage: true
           deps: golang.org/x/net@v0.7.0 github.com/docker/distribution@v2.8.2 github.com/docker/docker@v20.10.24
-
   - range: go-builds
     name: "katib-${{range.key}}-compat"
     description: Kubeflow Katib ${{range.key}}-compat
@@ -62,7 +56,6 @@ subpackages:
           # Symlink the binary from usr/bin to /opt/katib
           mkdir -p "${{targets.subpkgdir}}"/opt/katib
           ln -sf /usr/bin/katib-${{range.key}} ${{targets.subpkgdir}}/opt/katib/katib-${{range.key}}
-
   - name: katib-earlystopping
     description: Kubeflow Katib earlystopping
     dependencies:
@@ -80,7 +73,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
           tar c ./pkg | tar xvf - -C ${{targets.subpkgdir}}/opt/katib/
           mv ./$SUGGESTION_DIR/* ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
-
   # TODO(developer-guy): set runtime deps and uncomment when Tensorflow get ready
   # - name: katib-tfevent-metricscollector
   #   description: Kubeflow Katib tfevent-metricscollector
@@ -116,7 +108,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
           tar c ./pkg | tar xvf - -C ${{targets.subpkgdir}}/opt/katib/
           mv ./$SUGGESTION_DIR/* ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
-
   - name: katib-suggestion-hyperopt
     description: Kubeflow Katib suggestion-hyperopt
     dependencies:
@@ -140,7 +131,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
           tar c ./pkg | tar xvf - -C ${{targets.subpkgdir}}/opt/katib/
           mv ./$SUGGESTION_DIR/* ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
-
   - name: katib-suggestion-nas-darts
     description: Kubeflow Katib suggestion-nas-darts
     dependencies:
@@ -157,7 +147,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
           tar c ./pkg | tar xvf - -C ${{targets.subpkgdir}}/opt/katib/
           mv ./$SUGGESTION_DIR/* ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
-
   # TODO(developer-guy): set runtime deps and uncomment when Tensorflow get ready
   # - name: katib-suggestion-nas-enas
   #   description: Kubeflow Katib suggestion-nas-enas
@@ -188,7 +177,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
           tar c ./pkg | tar xvf - -C ${{targets.subpkgdir}}/opt/katib/
           mv ./$SUGGESTION_DIR/* ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
-
   - name: katib-suggestion-pbt-enas
     description: Kubeflow Katib suggestion-pbt-enas
     dependencies:
@@ -205,7 +193,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
           tar c ./pkg | tar xvf - -C ${{targets.subpkgdir}}/opt/katib/
           mv ./$SUGGESTION_DIR/* ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
-
   - name: katib-suggestion-skopt-enas
     description: Kubeflow Katib suggestion-skopt-enas
     dependencies:
@@ -229,7 +216,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
           tar c ./pkg | tar xvf - -C ${{targets.subpkgdir}}/opt/katib/
           mv ./$SUGGESTION_DIR/* ${{targets.subpkgdir}}/opt/katib/$SUGGESTION_DIR
-
 update:
   enabled: true
   github:
