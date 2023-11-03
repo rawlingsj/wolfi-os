@@ -1,32 +1,27 @@
 package:
   name: timoni
-  version: 0.13.1
+  version: 0.15.0
   epoch: 0
   description: Timoni is a package manager for Kubernetes, powered by CUE and inspired by Helm.
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
       - busybox
       - ca-certificates-bundle
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/stefanprodan/timoni
       tag: v${{package.version}}
-      expected-commit: 4b047b0868833bb92cae3302360946eb896b6501
-
+      expected-commit: c1caaf566de0cacb3936a7b5764d9c7701a0c3b4
   - uses: go/build
     with:
       packages: ./cmd/timoni
       output: timoni
       ldflags: -s -w -X main.VERSION=${{package.version}}
-
   - uses: strip
-
 update:
   enabled: true
   github:
