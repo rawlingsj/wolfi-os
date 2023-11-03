@@ -1,6 +1,6 @@
 package:
   name: ruby3.2-activemodel
-  version: 7.0.8
+  version: 7.1.1
   epoch: 0
   description: A toolkit for building modeling frameworks like Active Record. Rich support for attributes, callbacks, validations, serialization, internationalization, and testing.
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     runtime:
       - ruby3.2-activesupport
-
 environment:
   contents:
     packages:
@@ -18,30 +17,24 @@ environment:
       - build-base
       - busybox
       - git
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/rails/rails
       tag: v${{package.version}}
-      expected-commit: fc734f28e65ef8829a1a939ee6702c1f349a1d5a
-
+      expected-commit: 23938052acd773fa24068debe56cd892cbf8d868
   - uses: ruby/build
     with:
       gem: ${{vars.gem}}
       dir: activemodel
-
   - uses: ruby/install
     with:
       gem: ${{vars.gem}}
       version: ${{package.version}}
       dir: activemodel
-
   - uses: ruby/clean
-
 vars:
   gem: activemodel
-
 update:
   enabled: true
   github:
