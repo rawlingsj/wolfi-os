@@ -1,6 +1,6 @@
 package:
   name: jenkins
-  version: "2.423"
+  version: "2.430"
   epoch: 0
   description:
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     runtime:
       - ttf-dejavu
-
 environment:
   contents:
     packages:
@@ -29,17 +28,14 @@ environment:
       - git
       - patch
       - ttf-dejavu
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/jenkinsci/jenkins/archive/refs/tags/jenkins-${{package.version}}.tar.gz
-      expected-sha256: 1caf70585c045556dcb1758561207a49e1e80b56cd4afa8d9c0ad32fff8f6b3a
-
+      expected-sha256: 5007bae83dbb00ef5948fb0833b251e480b89c2c4f86255f97eac5bff827d2ec
   - uses: patch
     with:
       patches: ignoreArchiveNotReadableTest.patch
-
   - runs: |
       export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
       export LANG=en_US.UTF-8
@@ -51,7 +47,6 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/usr/share/java/jenkins
       mv war/target/jenkins.war ${{targets.destdir}}/usr/share/java/jenkins/
-
 update:
   enabled: true
   github:
