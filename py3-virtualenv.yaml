@@ -1,7 +1,7 @@
 # Generated from https://pypi.org/project/virtualenv/
 package:
   name: py3-virtualenv
-  version: 20.24.5
+  version: 20.24.6
   epoch: 0
   description: Virtual Python Environment builder
   copyright:
@@ -13,7 +13,6 @@ package:
       - py3-importlib-metadata
       - py3-platformdirs
       - python3
-
 environment:
   contents:
     packages:
@@ -24,22 +23,18 @@ environment:
       - py3-setuptools
       - py3-build
       - py3-installer
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/pypa/virtualenv
       tag: ${{package.version}}
-      expected-commit: 7e50f99e1b749ab02bcfd413c7fd9a43e4be83a6
-
+      expected-commit: 29c08dfd640ecc176df995c39a55a0509990bdc4
   - name: Python Build
     runs: |
       python -m build
       python3 -m installer -d "${{targets.destdir}}" dist/*.whl
       find ${{targets.destdir}} -name "*.pyc" -exec rm -rf '{}' +
-
   - uses: strip
-
 update:
   enabled: true
   github:
