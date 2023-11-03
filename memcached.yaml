@@ -1,11 +1,10 @@
 package:
   name: memcached
-  version: 1.6.21
+  version: 1.6.22
   epoch: 0
   description: "Distributed memory object caching system"
   copyright:
     - license: BSD-3-Clause
-
 environment:
   contents:
     packages:
@@ -18,13 +17,11 @@ environment:
       - cyrus-sasl-dev
       - linux-headers
       # - bsd-compat-headers
-
 pipeline:
   - uses: fetch
     with:
       uri: https://www.memcached.org/files/memcached-${{package.version}}.tar.gz
-      expected-sha512: 9d8ba8964474e7ed40095e414747a3ce76860ee32b9d8bac19fc7932a79d4bb9947e4cbe810933b6d271f4b0ee5576e25089ca40f414b25faf9245733bfbd369
-
+      expected-sha512: a30adc4f14c32051d2fc112eaa71de96f7ba614bd7f940ab5dd86365fe5e4df1399fa6fe6591cee903c8b914f2156050edef3139bafe38cd4a2b6424ba973e8e
   - uses: autoconf/configure
     with:
       opts: |
@@ -34,13 +31,9 @@ pipeline:
         --enable-sasl \
         --enable-sasl-pwdb \
         --enable-seccomp
-
   - uses: autoconf/make
-
   - uses: autoconf/make-install
-
   - uses: strip
-
 subpackages:
   - name: "memcached-dev"
     description: "headers for memcached"
@@ -49,12 +42,10 @@ subpackages:
     dependencies:
       runtime:
         - memcached
-
   - name: "memcached-doc"
     description: "memcached manpages"
     pipeline:
       - uses: split/manpages
-
 update:
   enabled: true
   github:
