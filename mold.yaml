@@ -1,11 +1,10 @@
 package:
   name: mold
-  version: 2.1.0
+  version: 2.3.1
   epoch: 0
   description: "mold linker"
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -18,13 +17,11 @@ environment:
       - mimalloc2-dev
       - openssl-dev
       - libtbb-dev
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/rui314/mold/archive/refs/tags/v${{package.version}}.tar.gz
-      expected-sha256: a32bec1282671b18ea4691855aed925ea2f348dfef89cb7689cd81273ea0c5df
-
+      expected-sha256: 380f540114408c37bcdb7f3bda91a056448a93124ca6992a373ae2bda35e9af7
   - name: 'Configure mold'
     runs: |
       cmake -B build -G Ninja \
@@ -36,19 +33,14 @@ pipeline:
         -DMOLD_USE_SYSTEM_MIMALLOC=ON \
         -DMOLD_USE_SYSTEM_TBB=ON \
         -DBUILD_TESTING="OFF"
-
   - runs: |
       cmake --build build
-
   - runs: |
       DESTDIR="${{targets.destdir}}" cmake --install build
-
   - name: 'Clean up documentation'
     runs: |
       rm -rf ${{targets.destdir}}/usr/share/info
-
   - uses: strip
-
 update:
   enabled: true
   github:
