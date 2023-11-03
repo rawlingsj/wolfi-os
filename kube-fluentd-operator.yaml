@@ -1,7 +1,7 @@
 package:
   name: kube-fluentd-operator
-  version: 1.17.6
-  epoch: 5
+  version: 1.18.0
+  epoch: 0
   description: Auto-configuration of Fluentd daemon-set based on Kubernetes metadata
   copyright:
     - license: MIT
@@ -11,7 +11,6 @@ package:
       - ruby-3.2
       - libsystemd
       - busybox
-
 environment:
   contents:
     packages:
@@ -36,18 +35,15 @@ environment:
       - bash
       - go
       # - shadow
-
 # https://github.com/javiercri/fluent-plugin-google-cloud/commit/619c813c265d51f4dd0b1cada3a07e615b47cdde
 vars:
   FLUENT_PLUGIN_GOOGLE_CLOUD_COMMIT: "619c813c265d51f4dd0b1cada3a07e615b47cdde"
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/vmware/kube-fluentd-operator
       tag: v${{package.version}}
-      expected-commit: 818fbdd8e007f029bc32433d5ee138f43d653e73
-
+      expected-commit: f57c2f060e0fe3046cc1af5cb4efcc6a34e9a57e
   - runs: |
       echo 'gem: --no-rdoc --no-ri' >> ~/.gemrc
 
@@ -80,16 +76,13 @@ pipeline:
 
       # remove cache to avoid including it in the package
       rm -rf ${{targets.destdir}}/$(ruby -e "puts File.join(Gem.default_dir, 'ruby', RbConfig::CONFIG['ruby_version'])")/cache
-
   - uses: strip
-
   - runs: |
       mkdir -p ${{targets.destdir}}/usr/bin
       cd config-reloader
       make build VERSION=${{package.version}}
       mv config-reloader ${{targets.destdir}}/usr/bin/
       mv ./templates ${{targets.destdir}}/etc/fluent/
-
 subpackages:
   - name: kube-fluentd-operator-oci-entrypoint
     description: Entrypoint for using kube-fluentd-operator
@@ -102,7 +95,6 @@ subpackages:
           mkdir -p ${{targets.subpkgdir}}/var/lib/kube-fluentd-operator/initdb
           cp entrypoint.sh ${{targets.subpkgdir}}/var/lib/kube-fluentd-operator/initdb/
           chmod +x ${{targets.subpkgdir}}/var/lib/kube-fluentd-operator/initdb/entrypoint.sh
-
   - name: kube-fluentd-operator-default-config
     description: Default configuration for kube-fluentd-operator
     pipeline:
@@ -110,7 +102,6 @@ subpackages:
           cd base-image
           mkdir -p ${{targets.subpkgdir}}/etc/fluent
           cp failsafe.conf ${{targets.subpkgdir}}/etc/fluent/fluent.conf
-
   - name: kube-fluentd-operator-compat
     pipeline:
       - runs: |
@@ -130,7 +121,6 @@ subpackages:
           # this should probably live in the ruby-3.2 package but not sure if we need to do it in a way that multiple ruby versions can coexist
           # TODO JR to followup
           ln -sf $(ruby -e "puts File.join(Gem.default_dir, 'ruby', RbConfig::CONFIG['ruby_version'])") ${{targets.subpkgdir}}/usr/lib/gem/home
-
 update:
   enabled: true
   github:
