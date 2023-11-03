@@ -1,11 +1,10 @@
 package:
   name: aws-c-mqtt
-  version: 0.9.5
+  version: 0.9.8
   epoch: 0
   description: AWS C99 implementation of the MQTT 3.1.1 specification
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -21,13 +20,11 @@ environment:
       - aws-c-io-dev
       - openssl-dev
       - s2n-tls-dev
-
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: 987289535d3c988fe949f49d81268736c96fe27b27c98c899f0a148577f6627b
+      expected-sha256: 7cbec0d35b2f926eb24d917cdc9a218056b2f76bce9de1abe39d0a2ef20211c8
       uri: https://github.com/awslabs/aws-c-mqtt/archive/refs/tags/v${{package.version}}.tar.gz
-
   - runs: |
       if [ "$CBUILD" != "$CHOST" ]; then
         CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
@@ -42,12 +39,9 @@ pipeline:
         -DBUILD_TESTING="$(want_check && echo ON || echo OFF)" \
         $CMAKE_CROSSOPTS
       cmake --build build
-
   - runs: |
       DESTDIR="${{targets.destdir}}" cmake --install build
-
   - uses: strip
-
 subpackages:
   - name: aws-c-mqtt-dev
     pipeline:
@@ -59,7 +53,6 @@ subpackages:
       runtime:
         - aws-c-mqtt
     description: aws-c-mqtt dev
-
 update:
   enabled: true
   github:
