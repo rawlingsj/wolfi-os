@@ -1,11 +1,10 @@
 package:
   name: vim
-  version: 9.0.1916
+  version: 9.0.2087
   epoch: 0
   description: "Improved vi-style text editor"
   copyright:
     - license: Vim
-
 environment:
   contents:
     packages:
@@ -16,13 +15,11 @@ environment:
       - ncurses-dev
       - lua5.3-dev
       - python3-dev
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/vim/vim/archive/v${{package.version}}.tar.gz
-      expected-sha256: 6aa9bdc5cb67c45de703dcb45f02bb46111efa38b79768152fd5384063d5f8b0
-
+      expected-sha256: bb81ddff96dd5ef25554ceeac6743b37380b00e186c9f94529c0b987398ac962
   - runs: |
       # vim seems to manually set FORTIFY_SOURCE=1, and setting both breaks the build
       export CFLAGS=${CFLAGS/-Wp,-D_FORTIFY_SOURCE=3/}
@@ -40,13 +37,9 @@ pipeline:
         --enable-gui=no \
         --with-lua-prefix=/usr/lua5.3 \
         --with-compiledby="Wolfi Linux"
-
   - uses: autoconf/make
-
   - uses: autoconf/make-install
-
   - uses: strip
-
 update:
   enabled: true
   github:
