@@ -1,11 +1,10 @@
 package:
   name: numpy
-  version: 1.26.0
+  version: 1.26.1
   epoch: 0
   description: "The fundamental package for scientific computing with Python."
   copyright:
     - license: BSD-3-Clause
-
 environment:
   contents:
     packages:
@@ -25,25 +24,19 @@ environment:
       - gfortran
       - py3-pip
       - openblas-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/numpy/numpy
       tag: v${{package.version}}
-      expected-commit: d35cd07ea997f033b2d89d349734c61f5de54b0d
-
+      expected-commit: 411a55b9ec084c3315fe5f199351c31d0eb3c352
   - runs: |
       git submodule update --init
-
   - runs: |
       python3 setup.py build
-
   - runs: |
       python3 setup.py install --prefix=/usr --root="${{targets.destdir}}"
-
   - uses: strip
-
 subpackages:
   - name: f2py
     description: "f2py for numpy (for python3)"
@@ -55,7 +48,6 @@ subpackages:
       runtime:
         - python3-dev
         - numpy
-
 update:
   enabled: true
   github:
