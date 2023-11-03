@@ -1,11 +1,10 @@
 package:
   name: grpc
-  version: 1.57.0
-  epoch: 1
+  version: 1.59.2
+  epoch: 0
   description: The C based gRPC
   copyright:
     - license: Apache-2.0 AND BSD-3-Clause AND MIT
-
 environment:
   contents:
     packages:
@@ -39,18 +38,15 @@ environment:
       - re2-dev
       - xxhash-dev
       - icu-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/grpc/grpc
       tag: v${{package.version}}
-      expected-commit: a61640173d00b63e0b55ad61915a9b1708e12d27
-
+      expected-commit: 883e5f76976b86afee87415dc67bde58d9b295a4
   - runs: |
       cd third_party
       git submodule update --init --recursive
-
   - runs: |
       mkdir -p "${{targets.destdir}}"/usr/share/doc/grpc
       cmake -B _build -G Ninja \
@@ -82,7 +78,6 @@ pipeline:
       # grpcio-tools
       cd tools/distrib/python
       python3 make_grpcio_tools.py
-
   - runs: |
       DESTDIR="${{targets.destdir}}" cmake --install _build
       python3 setup.py install --skip-build --root="${{targets.destdir}}"
@@ -91,7 +86,6 @@ pipeline:
       rm "${{targets.destdir}}"/usr/share/doc/grpc/.gitignore
       find "${{targets.destdir}}" -type f -name roots.pem -exec \
       sh -c 'rm $0 && ln -s /etc/ssl/certs/ca-certificates.crt $0' "{}" \;
-
 subpackages:
   - name: py3-grpcio
     description: "gRPC Python HTTP/2-based RPC framework"
@@ -102,7 +96,6 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/lib
           mv ${{targets.destdir}}/usr/lib/python3* ${{targets.subpkgdir}}/usr/lib/
-
 update:
   enabled: true
   github:
