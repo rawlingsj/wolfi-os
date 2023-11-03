@@ -1,11 +1,10 @@
 package:
   name: tomcat
-  version: 10.1.13
+  version: 10.1.15
   epoch: 0
   description: Apache Tomcat Web Server
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -16,21 +15,18 @@ environment:
       - ant
   environment:
     JAVA_HOME: /usr/lib/jvm/java-17-openjdk
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/apache/tomcat
       tag: ${{package.version}}
-      expected-commit: 71dddc8a1b8fe1175a14e6dd98bb8af56c9ad75d
-
+      expected-commit: bd69455d3331a153c411b6f1ac5e434bed06f3ce
   - runs: |
       cat <<EOF > build.properties
       skip.installer=true
       base.path=$PWD
       compile.debug=false
       EOF
-
   - runs: |
       ant
 
@@ -46,7 +42,6 @@ pipeline:
       mkdir -p ${{targets.destdir}}/usr/share/tomcat/logs
       mkdir -p ${{targets.destdir}}/usr/share/tomcat/temp
       mkdir -p ${{targets.destdir}}/usr/share/tomcat/webapps
-
 update:
   enabled: true
   ignore-regex-patterns:
