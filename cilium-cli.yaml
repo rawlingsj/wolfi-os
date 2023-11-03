@@ -1,11 +1,10 @@
 package:
   name: cilium-cli
-  version: 0.15.8
+  version: 0.15.12
   epoch: 0
   description: CLI to install, manage & troubleshoot Kubernetes clusters running Cilium
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -13,22 +12,18 @@ environment:
       - ca-certificates-bundle
       - go
       - git
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/cilium/cilium-cli
       tag: v${{package.version}}
-      expected-commit: 7f33713a0710a1fff76cfe1b7fd7fbaea2ce7977
+      expected-commit: bcc4f03f8873247e976fda993c9d0684dba1705a
       destination: cilium-cli
-
   - runs: |
       cd cilium-cli
       make install
       install -Dm755  /usr/local/bin/cilium ${{targets.destdir}}/usr/bin/cilium
-
   - uses: strip
-
 update:
   enabled: true
   github:
