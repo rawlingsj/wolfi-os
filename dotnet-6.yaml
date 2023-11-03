@@ -1,7 +1,7 @@
 package:
   name: dotnet-6
-  version: 6.0.121
-  epoch: 1
+  version: 6.0.124
+  epoch: 0
   description: ".NET SDK, version 6"
   target-architecture:
     - all
@@ -10,7 +10,6 @@ package:
   dependencies:
     runtime:
       - icu
-
 environment:
   contents:
     packages:
@@ -37,19 +36,16 @@ environment:
       - curl
       - bash
       - libunwind-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/dotnet/installer
       tag: v${{package.version}}
-      expected-commit: 00e4340849d26c84e65f750acb91355d4c40f9ae
+      expected-commit: c1725aecd852dbca99b12a2e45076d0d3eeac19c
       destination: /home/build/installer
-
   - working-directory: /home/build/installer
     runs: |
       ./build.sh /p:ArcadeBuildTarball=true /p:TarballDir=/home/build/src
-
   - working-directory: /home/build/src
     pipeline:
       - uses: patch
@@ -93,9 +89,7 @@ pipeline:
               tar zxf artifacts/x64/Release/dotnet-sdk-*.tar.gz -C "${{targets.destdir}}"/usr/share/dotnet
       - runs: |
           ln -s /usr/share/dotnet/dotnet "${{targets.destdir}}"/usr/bin/dotnet
-
   - uses: strip
-
 subpackages:
   - name: dotnet-6-runtime
     description: "The .NET Core Runtime, version 6"
@@ -106,14 +100,12 @@ subpackages:
     dependencies:
       runtime:
         - dotnet-6
-
   - name: dotnet-6-runtime-default
     dependencies:
       runtime:
         - dotnet-6-runtime
       provides:
         - dotnet-runtime=6
-
   - name: aspnet-6-runtime
     description: "The ASP.NET Core Runtime, version 6"
     pipeline:
@@ -123,14 +115,12 @@ subpackages:
     dependencies:
       runtime:
         - dotnet-6-runtime
-
   - name: aspnet-6-runtime-default
     dependencies:
       runtime:
         - aspnet-6-runtime
       provides:
         - aspnet-runtime=6
-
   - name: dotnet-6-targeting-pack
     description: "The .NET Core targeting pack, version 6"
     pipeline:
@@ -138,7 +128,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}"/usr/share/dotnet/packs
           mv "${{targets.destdir}}"/usr/share/dotnet/packs/NETStandard.Library.* "${{targets.subpkgdir}}"/usr/share/dotnet/packs/
           mv "${{targets.destdir}}"/usr/share/dotnet/packs/Microsoft.NETCore.App.* "${{targets.subpkgdir}}"/usr/share/dotnet/packs/
-
   - name: aspnet-6-targeting-pack
     description: "The ASP.NET targeting pack, version 6"
     pipeline:
@@ -148,7 +137,6 @@ subpackages:
     dependencies:
       runtime:
         - dotnet-6-targeting-pack
-
   - name: dotnet-6-sdk
     description: "The .NET Core SDK, version 6"
     pipeline:
@@ -162,14 +150,12 @@ subpackages:
       runtime:
         - dotnet-6-runtime
         - dotnet-6-targeting-pack
-
   - name: dotnet-6-sdk-default
     dependencies:
       runtime:
         - dotnet-6-sdk
       provides:
         - dotnet-sdk=6
-
 update:
   enabled: true
   github:
