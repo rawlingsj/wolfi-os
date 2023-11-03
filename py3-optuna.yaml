@@ -1,7 +1,7 @@
 package:
   name: py3-optuna
-  version: 3.3.0
-  epoch: 1
+  version: 3.4.0
+  epoch: 0
   description: A hyperparameter optimization framework
   copyright:
     - license: MIT License
@@ -16,7 +16,6 @@ package:
       - py3-tqdm
       - py3-pyyaml
       - python3
-
 environment:
   contents:
     packages:
@@ -29,25 +28,20 @@ environment:
       - py3.11-installer
       - py3-gpep517
       - py3-wheel
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/optuna/optuna
-      expected-commit: da305057280c71b26d6647737908e4af3d448e50
+      expected-commit: 4ea580fca08dfbf5525692d857893770cb4e7208
       tag: v${{package.version}}
-
   - name: Python Build
     runs: |
       python3 -m gpep517 build-wheel \
       --wheel-dir .dist \
       --output-fd 3 3>&1 >&2
-
   - name: Python Install
     runs: python3 -m installer --destdir="${{targets.destdir}}" .dist/*.whl
-
   - uses: strip
-
 update:
   enabled: true
   github:
