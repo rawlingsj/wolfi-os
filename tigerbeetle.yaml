@@ -1,11 +1,10 @@
 package:
   name: tigerbeetle
-  version: 0.13.130
+  version: 0.14.158
   epoch: 0
   description: "The distributed financial accounting database designed for mission critical safety and performance."
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -13,14 +12,12 @@ environment:
       - busybox
       - ca-certificates-bundle
       - build-base
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/tigerbeetledb/tigerbeetle
       tag: ${{package.version}}
-      expected-commit: 2a3128d3d0a725564faae5fb93e09faf4afe9ac4
-
+      expected-commit: 6858f5ace0839b727a6f20634d7688c92dbf8b65
   - runs: |
       # cpu values from here: https://github.com/tigerbeetle/tigerbeetle/blob/2ab9fd620e53a6d61cb119e48ece4008bedd777d/tools/docker/Dockerfile#L30C79-L30C92
       if [ ${{build.arch}} == 'aarch64' ]; then
@@ -31,9 +28,7 @@ pipeline:
 
       mkdir -p ${{targets.destdir}}/usr/bin
       mv zig-out/bin/tigerbeetle ${{targets.destdir}}/usr/bin/
-
   - uses: strip
-
 update:
   enabled: true
   github:
