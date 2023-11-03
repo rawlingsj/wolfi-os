@@ -1,11 +1,10 @@
 package:
   name: vertical-pod-autoscaler
-  version: 0.14.0
-  epoch: 3
+  version: 1.0.0
+  epoch: 0
   description: Autoscaling components for Kubernetes
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -13,14 +12,12 @@ environment:
       - ca-certificates-bundle
       - build-base
       - go
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/kubernetes/autoscaler
       tag: vertical-pod-autoscaler-${{package.version}}
-      expected-commit: cd5ed0be530e2313f762e30042cb324b768507f6
-
+      expected-commit: 276f1b8b4ba7bcd118bc59b987b47d79377fd561
   - uses: go/build
     with:
       modroot: vertical-pod-autoscaler
@@ -29,7 +26,6 @@ pipeline:
       output: admission-controller
       deps: golang.org/x/net@v0.7.0
       vendor: "true"
-
   - uses: go/build
     with:
       modroot: vertical-pod-autoscaler
@@ -38,7 +34,6 @@ pipeline:
       output: updater
       deps: golang.org/x/net@v0.7.0
       vendor: "true"
-
   - uses: go/build
     with:
       modroot: vertical-pod-autoscaler
@@ -47,20 +42,17 @@ pipeline:
       output: recommender
       deps: golang.org/x/net@v0.7.0
       vendor: "true"
-
 subpackages:
   - name: vertical-pod-autoscaler-updater
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           mv ${{targets.destdir}}/usr/bin/updater ${{targets.subpkgdir}}/usr/bin
-
   - name: vertical-pod-autoscaler-recommender
     pipeline:
       - runs: |
           mkdir -p ${{targets.subpkgdir}}/usr/bin
           mv ${{targets.destdir}}/usr/bin/recommender ${{targets.subpkgdir}}/usr/bin
-
 update:
   enabled: true
   github:
