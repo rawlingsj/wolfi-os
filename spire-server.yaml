@@ -1,14 +1,13 @@
 package:
   name: spire-server
-  version: 1.7.2
-  epoch: 1
+  version: 1.8.3
+  epoch: 0
   description: The SPIFFE Runtime Environment (SPIRE) server
   copyright:
     - license: Apache-2.0
   dependencies:
     runtime:
       - ca-certificates-bundle
-
 environment:
   contents:
     packages:
@@ -18,15 +17,13 @@ environment:
       - build-base
       - git
       - libcap-utils
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/spiffe/spire
       tag: v${{package.version}}
-      expected-commit: a6ce058b58408b1f2fa80ba772e447d592344a0f
+      expected-commit: eaa04d51a12705eb829cc11e5a4ee75b1389d13e
       destination: spire
-
   - runs: |
       cd spire
 
@@ -51,9 +48,7 @@ pipeline:
       make bin/spire-server
       make bin/oidc-discovery-provider
       install -Dm755 ./bin/spire-server "${{targets.destdir}}/usr/bin/spire-server"
-
   - uses: strip
-
 subpackages:
   - name: spire-agent
     description: The SPIFFE Runtime Environment (SPIRE) agent
@@ -62,7 +57,6 @@ subpackages:
           cd spire
           mkdir -p "${{targets.subpkgdir}}"/usr/bin
           install -Dm755 ./bin/spire-agent "${{targets.subpkgdir}}/usr/bin/spire-agent"
-
   - name: spire-oidc-discovery-provider
     description: The SPIFFE Runtime Environment (SPIRE) agent
     pipeline:
@@ -71,7 +65,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}"/usr/bin
           install -Dm755 ./bin/oidc-discovery-provider "${{targets.subpkgdir}}/usr/bin/oidc-discovery-provider"
           setcap cap_net_bind_service=+ep "${{targets.subpkgdir}}/usr/bin/oidc-discovery-provider"
-
 update:
   enabled: true
   github:
