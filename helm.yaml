@@ -1,14 +1,13 @@
 package:
   name: helm
-  version: 3.12.3
-  epoch: 2
+  version: 3.13.1
+  epoch: 0
   description: The Kubernetes Package Manager
   copyright:
     - license: Apache-2.0
   dependencies:
     runtime:
       - ca-certificates-bundle
-
 environment:
   contents:
     packages:
@@ -17,15 +16,13 @@ environment:
       - go
       - build-base
       - git
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/helm/helm
       tag: v${{package.version}}
-      expected-commit: 3a31588ad33fe3b89af5a2a54ee1d25bfe6eaa5e
+      expected-commit: 3547a4b5bf5edb5478ce352e18858d8a552a4110
       destination: helm
-
   - runs: |
       cd helm
 
@@ -35,9 +32,7 @@ pipeline:
       go mod tidy
       make build
       install -Dm755 ./bin/helm "${{targets.destdir}}/usr/bin/helm"
-
   - uses: strip
-
 update:
   enabled: true
   github:
