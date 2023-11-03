@@ -1,8 +1,8 @@
 # Generated from https://pypi.org/project/conda-build/
 package:
   name: conda-build
-  version: 3.26.1
-  epoch: 1
+  version: 3.27.0
+  epoch: 0
   description: tools for building conda packages
   copyright:
     - license: BSD 3-clause
@@ -12,7 +12,6 @@ package:
       - py3-filelock
       - py3-requests
       - python3
-
 environment:
   contents:
     packages:
@@ -27,18 +26,15 @@ environment:
       - py3-hatch
       - python-3
       - wolfi-base
-
 pipeline:
   - uses: git-checkout
     with:
-      expected-commit: c2bfe2b44ad34b06d8930aa4239995367f3eaf12
+      expected-commit: 27ea32b223ce412be5412e166068aeecf503880d
       repository: https://github.com/conda/conda-build
       tag: ${{package.version}}
-
   - runs: |
       hatch build
       python3 -m installer -d "${{targets.destdir}}" dist/conda_build*.whl
-
 update:
   enabled: true
   github:
