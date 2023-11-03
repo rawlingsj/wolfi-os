@@ -1,7 +1,7 @@
 # Generated from https://pypi.org/project/sqlglot/
 package:
   name: py3-sqlglot
-  version: 18.5.1
+  version: 19.0.3
   epoch: 0
   description: An easily customizable SQL parser and transpiler
   copyright:
@@ -9,7 +9,6 @@ package:
   dependencies:
     runtime:
       - python3
-
 environment:
   contents:
     packages:
@@ -20,22 +19,17 @@ environment:
       - python3
       - py3-setuptools
       - py3-pip
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/tobymao/sqlglot
       tag: v${{package.version}}
-      expected-commit: b59ef0f6abbe90310b56a4cea72f0850c22e1086
-
+      expected-commit: c51d9ae7c45a66d32b4264712cc7d652964411fa
   - name: Python Build
     runs: python setup.py build
-
   - name: Python Install
     runs: python setup.py install --prefix=/usr --root="${{targets.destdir}}"
-
   - uses: strip
-
 update:
   enabled: true
   github:
