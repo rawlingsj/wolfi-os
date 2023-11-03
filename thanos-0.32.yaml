@@ -1,6 +1,6 @@
 package:
   name: thanos-0.32
-  version: 0.32.3
+  version: 0.32.5
   epoch: 0
   description: Highly available Prometheus setup with long term storage capabilities.
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     provides:
       - thanos=0.32.999
-
 environment:
   contents:
     packages:
@@ -17,22 +16,17 @@ environment:
       - bash
       - go
       - curl
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/thanos-io/thanos
       tag: v${{package.version}}
-      expected-commit: 3d98d7ce7a254b893e4c8ee8122f7f6edd3174bd
-
+      expected-commit: 750e8a94eed5226cd4562117295d540a968c163c
   - runs: |
       make build
-
   - runs: |
       install -Dm755 .cache/go/bin/thanos "${{targets.destdir}}"/usr/bin/thanos
-
   - uses: strip
-
 update:
   enabled: true
   github:
