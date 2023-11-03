@@ -1,6 +1,6 @@
 package:
   name: istio-pilot-discovery-1.19
-  version: 1.19.0
+  version: 1.19.3
   epoch: 0
   description: Istio controller
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     provides:
       - istio-pilot-discovery=1.19
-
 environment:
   contents:
     packages:
@@ -17,28 +16,23 @@ environment:
       - go
   environment:
     CGO_ENABLED: "0"
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/istio/istio
       tag: ${{package.version}}
-      expected-commit: 3b3ca8ec1632961e355f398f7357ebed9b13aa43
-
+      expected-commit: 41218ffa66c12acf77ad08b3ef07d296218d0929
   - uses: go/build
     with:
       packages: ./pilot/cmd/pilot-discovery
       output: pilot-discovery
-
   - runs: |
       mkdir -p ${{targets.destdir}}/var/lib/istio/envoy
       cp ./tools/packaging/common/envoy_bootstrap.json \
         ${{targets.destdir}}/var/lib/istio/envoy/envoy_bootstrap_tmpl.json
       cp ./tools/packaging/common/gcp_envoy_bootstrap.json \
         ${{targets.destdir}}/var/lib/istio/envoy/gcp_envoy_bootstrap_tmpl.json
-
   - uses: strip
-
 subpackages:
   - name: ${{package.name}}-compat
     pipeline:
@@ -50,7 +44,6 @@ subpackages:
     dependencies:
       provides:
         - istio-discovery-compat=1.19
-
 update:
   enabled: true
   github:
