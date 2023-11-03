@@ -1,11 +1,10 @@
 package:
   name: oranda
-  version: 0.4.0
+  version: 0.5.0
   epoch: 0
   description: generate beautiful landing pages for your developer tools
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -14,21 +13,17 @@ environment:
       - build-base
       - rust
       - openssl-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/axodotdev/oranda
       tag: v${{package.version}}
-      expected-commit: bdb11c49588a13d2c52ee587ff718889f4dab84a
-
+      expected-commit: 550817360d168ce1edd9e401e90e96bf248835b3
   - runs: |
       cargo build --locked --profile=dist
       mkdir -p ${{targets.destdir}}/usr/bin
       mv target/dist/oranda ${{targets.destdir}}/usr/bin/
-
   - uses: strip
-
 update:
   enabled: true
   github:
