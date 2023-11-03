@@ -1,11 +1,10 @@
 package:
   name: ntpd-rs
-  version: 0.3.7
-  epoch: 1
+  version: 1.0.0
+  epoch: 0
   description: "An NTP implementation in Rust."
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -14,22 +13,18 @@ environment:
       - busybox
       - ca-certificates-bundle
       - build-base
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/pendulum-project/ntpd-rs
       tag: v${{package.version}}
-      expected-commit: f0aa54a13ba1869eac43911d59a232ee40504007
-
+      expected-commit: 607460a40bf93ce857667d51f1589b838bd46642
   - name: Configure and build
     runs: |
       cargo build --release -vv
       mkdir -p ${{targets.destdir}}/usr/bin/
       mv target/release/ntp-daemon ${{targets.destdir}}/usr/bin/
-
   - uses: strip
-
 update:
   enabled: true
   github:
