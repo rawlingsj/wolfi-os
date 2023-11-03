@@ -1,14 +1,13 @@
 package:
   name: calico
-  version: 3.26.1
-  epoch: 15
+  version: 3.26.3
+  epoch: 0
   description: "Cloud native networking and network security"
   target-architecture:
     - x86_64
     - aarch64
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -35,7 +34,6 @@ environment:
       - automake
       # TODO: Can remove this when cni-plugins are built from source
       - curl
-
 # The calico build process is heavily tailored towards using Makefiles to
 # orchestrate docker commands. This makes for a less than ideal
 # experience replicating it in melange. To try to maintain some level of
@@ -50,7 +48,7 @@ pipeline:
     with:
       repository: https://github.com/projectcalico/calico
       tag: v${{package.version}}
-      expected-commit: b1d192c95c89288e163038c5095fd23f9adfb8c1
+      expected-commit: bdb7878af3d67c690ef83ea3d008ef0498568f43
   - runs: |
       # Remediate GHSA-hqxw-f8mx-cpmw
       go get github.com/docker/distribution@v2.8.2
@@ -122,7 +120,6 @@ pipeline:
           # make -C ../felix build-bpf ARCH=$(ARCH)
           cp -r ../felix/bpf-gpl/bin/* $_target
           cp -r ../felix/bpf-apache/bin/* $_target
-
 subpackages:
   - name: "calico-node"
     dependencies:
@@ -219,7 +216,6 @@ subpackages:
 
           # TODO: Proper fix for this
           rm -f "${{targets.subpkgdir}}"/etc/nsswitch.conf
-
   # The felix binaries aren't actually shipped, but they contain some useful testing utilities
   - name: "calico-felix"
     dependencies:
@@ -293,7 +289,6 @@ subpackages:
             -ldflags "$LDFLAGS" \
             -o "${{targets.subpkgdir}}"/usr/bin/test-workload \
             ./felix/fv/test-workload
-
   - name: "calico-cni"
     dependencies:
       runtime:
@@ -322,7 +317,6 @@ subpackages:
           install -Dm755 cni-plugin/out/calico "${{targets.subpkgdir}}"/usr/bin/calico
           ln -sf /usr/bin/calico "${{targets.subpkgdir}}"/usr/bin/calico-ipam
           ln -sf /usr/bin/calico "${{targets.subpkgdir}}"/usr/bin/install
-
   - name: "calico-cni-compat"
     dependencies:
       runtime:
@@ -339,7 +333,6 @@ subpackages:
           ln -s /usr/bin/calico "${{targets.subpkgdir}}"/opt/cni/bin/calico
           ln -s /usr/bin/calico "${{targets.subpkgdir}}"/opt/cni/bin/calico-ipam
           ln -s /usr/bin/calico "${{targets.subpkgdir}}"/opt/cni/bin/install
-
   - name: "calico-apiserver"
     dependencies:
       runtime:
@@ -359,7 +352,6 @@ subpackages:
           output: calico-filecheck
           subpackage: "true"
           ldflags: "-s -w -X github.com/projectcalico/calico/cmd/apiserver/server.VERSION=${{package.version}}) -X github.com/projectcalico/calico/cmd/apiserver/server.BUILD_DATE=$(date -u +'%FT%T%z') -X github.com/projectcalico/calico/cmd/apiserver/server.GIT_DESCRIPTION=$(git describe --tags) -X github.com/projectcalico/calico/cmd/apiserver/server.GIT_REVISION=$(git rev-parse --short HEAD)"
-
   - name: "calico-app-policy"
     dependencies:
       runtime:
@@ -378,7 +370,6 @@ subpackages:
           packages: ./app-policy/cmd/healthz
           output: calico-healthz
           subpackage: "true"
-
   - name: "calico-kube-controllers"
     dependencies:
       runtime:
@@ -398,7 +389,6 @@ subpackages:
           output: check-status # keep naming convention as "check-status" is usually harded to /usr/bin/check-status
           subpackage: "true"
           ldflags: "-s -w -X main.VERSION=$(git describe --tags --dirty --always --abbrev=12)"
-
   - name: "calico-pod2daemon"
     description: "The calico pod2daemon components"
     dependencies:
@@ -429,14 +419,12 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/bin
           install -m755 ./pod2daemon/flexvol/docker/flexvol.sh "${{targets.subpkgdir}}"/usr/bin/flexvol.sh
-
   - name: calico-pod2daemon-flexvol-compat
     pipeline:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/local/bin
           ln -sf /usr/bin/calico-pod2daemon-flexvol "${{targets.subpkgdir}}"/usr/local/bin/flexvol
           ln -sf /usr/bin/flexvol.sh "${{targets.subpkgdir}}"/usr/local/bin/flexvol.sh
-
   - name: "calicoctl"
     pipeline:
       - uses: go/build
@@ -446,7 +434,6 @@ subpackages:
           output: calicoctl
           subpackage: "true"
           ldflags: "-s -w -X github.com/projectcalico/calico/calicoctl/commands.VERSION=$(git describe --tags --dirty --always --abbrev=12) -X github.com/projectcalico/calico/calicoctl/commands.GIT_REVISION=$(git rev-parse --short HEAD) -X github.com/projectcalico/calico/calicoctl/commands/common.VERSION=$(git describe --tags --dirty --always --abbrev=12) -X main.VERSION=$(git describe --tags --dirty --always --abbrev=12)"
-
   - name: "calico-typhad"
     description: "The calico typha daemon"
     dependencies:
@@ -472,7 +459,6 @@ subpackages:
 
           mkdir -p "${{targets.subpkgdir}}"/licenses
           cp ./typha/LICENSE "${{targets.subpkgdir}}"/licenses
-
   - name: "calico-typha-client"
     description: "The calico typha client"
     dependencies:
@@ -491,7 +477,6 @@ subpackages:
             go build -v -tags cgo -v -buildvcs=false \
             -o "${{targets.subpkgdir}}"/bin/typha-client \
             ./typha/cmd/typha-client
-
 update:
   enabled: true
   github:
