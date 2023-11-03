@@ -1,11 +1,10 @@
 package:
   name: pixi
-  version: 0.3.0
+  version: 0.6.0
   epoch: 0
   description: "Package management made easy"
   copyright:
     - license: BSD-3-Clause
-
 environment:
   contents:
     packages:
@@ -15,22 +14,18 @@ environment:
       - ca-certificates-bundle
       - build-base
       - openssl-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/prefix-dev/pixi
-      expected-commit: c7245f1dfbc68894f0a0be8f4dfb9f3a02a6297c
+      expected-commit: 30a0a5f7469eb1ffa5355fc3fc9b737322386b93
       tag: v${{package.version}}
-
   - name: Configure and build
     runs: |
       cargo build --release
       mkdir -p ${{targets.destdir}}/usr/bin/
       mv target/release/pixi ${{targets.destdir}}/usr/bin/
-
   - uses: strip
-
 update:
   enabled: true
   github:
