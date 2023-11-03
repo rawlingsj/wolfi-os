@@ -1,11 +1,10 @@
 package:
   name: aws-c-auth
-  version: 0.7.3
+  version: 0.7.5
   epoch: 0
   description: "C99 library implementation of AWS client-side authentication: standard credentials providers and signing"
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -22,13 +21,11 @@ environment:
       - aws-c-sdkutils-dev
       - openssl-dev
       - s2n-tls-dev
-
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: 22e334508b76f1beddefbf877f200c8a5ace4e3956c6be6545b7572762afe8c5
+      expected-sha256: 6c8dc392cb30e4443017b0350e7a598f76c028cf83b20ea835d9d19973c01bfa
       uri: https://github.com/awslabs/aws-c-auth/archive/refs/tags/v${{package.version}}.tar.gz
-
   - runs: |
       if [ "$CBUILD" != "$CHOST" ]; then
         CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
@@ -43,12 +40,9 @@ pipeline:
         -DBUILD_TESTING="$(want_check && echo ON || echo OFF)" \
         $CMAKE_CROSSOPTS
       cmake --build build
-
   - runs: |
       DESTDIR="${{targets.destdir}}" cmake --install build
-
   - uses: strip
-
 subpackages:
   - name: aws-c-auth-dev
     pipeline:
@@ -60,7 +54,6 @@ subpackages:
       runtime:
         - aws-c-auth
     description: aws-c-auth dev
-
 update:
   enabled: true
   github:
