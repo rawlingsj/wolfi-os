@@ -1,6 +1,6 @@
 package:
   name: argo-cd-2.8
-  version: 2.8.4
+  version: 2.8.6
   epoch: 0
   description: Declarative continuous deployment for Kubernetes.
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     provides:
       - argo-cd=2.8.999
-
 environment:
   contents:
     packages:
@@ -18,14 +17,12 @@ environment:
       - python3
       - nodejs-20
       - yarn
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/argoproj/argo-cd
       tag: v${{package.version}}
-      expected-commit: c27929928104dc37b937764baf65f38b78930e59
-
+      expected-commit: 6f7af53bea9ebc9e9eadd47fc43b671ef91c0586
   - runs: |
       cd ui
       yarn install
@@ -60,9 +57,7 @@ pipeline:
       ln -s /usr/bin/argocd ${{targets.destdir}}/usr/bin/argocd-notifications
       ln -s /usr/bin/argocd ${{targets.destdir}}/usr/bin/argocd-applicationset-controller
       ln -s /usr/bin/argocd ${{targets.destdir}}/usr/bin/argocd-k8s-auth
-
   - uses: strip
-
 subpackages:
   - name: ${{package.name}}-repo-server
     description: "ArgoCD repo server"
@@ -85,7 +80,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}"/usr/bin
           cp hack/gpg-wrapper.sh "${{targets.subpkgdir}}"/usr/bin/gpg-wrapper.sh
           cp hack/git-verify-wrapper.sh "${{targets.subpkgdir}}"/usr/bin/git-verify-wrapper.sh
-
   - name: ${{package.name}}-compat
     description: "Compatibility package for locating binaries according to upstream helm charts"
     pipeline:
@@ -105,7 +99,6 @@ subpackages:
     dependencies:
       provides:
         - argo-cd-compat=2.8.999
-
 update:
   enabled: true
   github:
