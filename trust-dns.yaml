@@ -1,11 +1,10 @@
 package:
   name: trust-dns
-  version: 0.23.0
+  version: 0.24.0
   epoch: 0
   description: ""
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -16,22 +15,18 @@ environment:
       - ca-certificates-bundle
       - build-base
       - openssl-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/bluejekyll/trust-dns
       tag: v${{package.version}}
-      expected-commit: a0523a5823bbad6732cb9b5ca15d61e0d6eaa2e0
-
+      expected-commit: 408d0baca080d1b201cd33e616dc4abd160ef6c0
   - name: Configure and build
     runs: |
       cargo build --release -p trust-dns --all-features
       mkdir -p ${{targets.destdir}}/usr/bin/
       mv target/release/trust-dns ${{targets.destdir}}/usr/bin/
-
   - uses: strip
-
 update:
   enabled: true
   github:
