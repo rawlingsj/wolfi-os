@@ -1,7 +1,7 @@
 package:
   name: k3s
-  version: 1.28.1
-  epoch: 1
+  version: 1.28.3
+  epoch: 0
   description:
   copyright:
     - license: Apache-2.0
@@ -13,7 +13,6 @@ package:
       - ip6tables # this pulls in iptables as well
       - libseccomp
       - conntrack-tools
-
 environment:
   contents:
     packages:
@@ -27,7 +26,6 @@ environment:
       - zstd
       - yq
       - crane
-
 var-transforms:
   # TODO: This transforms the version into the real k3s version. It's needed
   # because the wolfictl update bot doesn't yet support the k3s version format
@@ -38,7 +36,6 @@ var-transforms:
     match: ^(.+)$
     replace: $1+k3s1 # NOTE: Update k3s# if upstream ships a >k3s# revision
     to: full-package-version
-
 # Upstream uses `dapper` to initialize build environments, but since melange
 # already provides a consistent build environment, we adopt upstreams ./scripts
 # as much as possible.
@@ -47,7 +44,7 @@ pipeline:
     with:
       repository: https://github.com/k3s-io/k3s
       tag: v${{vars.full-package-version}}
-      expected-commit: 0d23cfe038ef22d7ca899764e9aaeea8a39d4874
+      expected-commit: 49411e7084f74b931882f1cf85bf2e17a5f02158
   - uses: patch
     with:
       # The upstream build uses server/main.go, which embeds information in the binary differently and confuses scanners.
@@ -103,7 +100,6 @@ pipeline:
       # Assert a max multicall size since it's a good sign that packaging happened correctly.
       [ $(stat -c%s "${{targets.destdir}}"/bin/k3s) -le $((15 * 1024 * 1024)) ] || { echo "Error: multicall k3s exceeds 15MB" >&2; exit 1; }
   - uses: strip
-
 subpackages:
   - name: k3s-images
     description: "pre-packaged k3s core runtime images"
@@ -153,7 +149,6 @@ subpackages:
           mkdir -p $_images_path
 
           crane pull $images $_images_path/k3s-airgap-images-$_arch.tar
-
 update:
   enabled: true
   github:
