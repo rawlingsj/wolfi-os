@@ -1,14 +1,13 @@
 package:
   name: crossplane-provider-aws
-  version: 0.40.0
-  epoch: 1
+  version: 0.43.1
+  epoch: 0
   description: Official AWS Provider for Crossplane by Upbound
   copyright:
     - license: Apache-2.0
   dependencies:
     runtime:
       - terraform-provider-aws
-
 environment:
   contents:
     packages:
@@ -21,14 +20,12 @@ environment:
       - gzip
   environment:
     CGO_ENABLED: 0
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/upbound/provider-aws
       tag: v${{package.version}}
-      expected-commit: 0f0d7a43d9d3b4919fb0f708f3a4794081dfbdd8
-
+      expected-commit: 8e4b97ba4125201a2fea009d87adab42e908c7c0
   - runs: |
       # `make` downloads `up`, unless we move our prebuilt `up` to where it expects it.
       GOARCH=$(go env GOARCH)
@@ -45,7 +42,6 @@ pipeline:
 
       mkdir -p "${{targets.destdir}}"/usr/local/bin/
       cp ./_output/bin/linux_${GOARCH}/monolith "${{targets.destdir}}"/usr/local/bin/provider
-
 data:
   - name: packages
     items:
@@ -53,7 +49,6 @@ data:
       s3: 'provider-aws-s3'
       iam: 'provider-aws-iam'
       rds: 'provider-aws-rds'
-
 subpackages:
   - name: crossplane-provider-aws-${{range.key}}
     range: packages
@@ -62,7 +57,6 @@ subpackages:
           up xpkg xp-extract xpkg.upbound.io/upbound/${{range.value}}:v${{package.version}}
           mkdir -p "${{targets.subpkgdir}}"
           gunzip out.gz -c > "${{targets.subpkgdir}}"/package.yaml
-
 update:
   enabled: true
   github:
