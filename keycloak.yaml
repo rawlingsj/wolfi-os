@@ -1,6 +1,6 @@
 package:
   name: keycloak
-  version: 22.0.3
+  version: 22.0.5
   epoch: 0
   description: Open Source Identity and Access Management For Modern Applications and Services
   copyright:
@@ -12,7 +12,6 @@ package:
     runtime:
       - bash # some helper scripts use bash
       - openjdk-17-default-jvm
-
 environment:
   contents:
     packages:
@@ -26,14 +25,12 @@ environment:
       - nodejs-18
       - wolfi-base
       - wolfi-baselayout
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/keycloak/keycloak
       tag: ${{package.version}}
-      expected-commit: 074e85b4b6b200d0554c07aba8ea1221ba79aab6
-
+      expected-commit: 8da7a52969f5dfa1235227646ffb07d6fcee8ef3
   - runs: |
       export LANG=en_US.UTF-8
       export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
@@ -47,7 +44,6 @@ pipeline:
       for i in kc.sh kcadm.sh kcreg.sh; do
         ln -sf /usr/share/java/keycloak-${{package.version}}/bin/$i ${{targets.destdir}}/usr/bin/$i
       done
-
 update:
   enabled: true
   github:
