@@ -1,14 +1,13 @@
 package:
   name: http-echo
-  version: 0.2.3
-  epoch: 4
+  version: 1.0.0
+  epoch: 0
   description: A tiny go web server that echos what you start it with!
   copyright:
     - license: MPL-2.0
   dependencies:
     runtime:
       - ca-certificates-bundle
-
 environment:
   contents:
     packages:
@@ -18,14 +17,12 @@ environment:
   environment:
     CGO_ENABLED: "0"
     GO111MODULE: "off"
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/hashicorp/http-echo
       tag: v${{package.version}}
-      expected-commit: f375b4ddff406ff94e661212fea488785ea7f809
-
+      expected-commit: 866d8f8313e92d96f940c2f0cf807abe934ab145
   - runs: |
       # https://github.com/hashicorp/http-echo/blob/f375b4ddff406ff94e661212fea488785ea7f809/Makefile#L50
       # https://github.com/hashicorp/http-echo/blob/f375b4ddff406ff94e661212fea488785ea7f809/scripts/compile.sh
@@ -41,9 +38,7 @@ pipeline:
         -ldflags="$LDFLAGS" \
         -o ${{targets.destdir}}/http-echo \
         .
-
   - uses: strip
-
 update:
   enabled: true
   github:
