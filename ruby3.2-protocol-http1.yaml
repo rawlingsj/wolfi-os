@@ -1,6 +1,6 @@
 package:
   name: ruby3.2-protocol-http1
-  version: 0.15.1
+  version: 0.16.0
   epoch: 0
   description: A low level implementation of the HTTP/1 protocol.
   copyright:
@@ -9,7 +9,6 @@ package:
     runtime:
       - ruby-3.2
       - ruby3.2-protocol-http
-
 environment:
   contents:
     packages:
@@ -19,31 +18,24 @@ environment:
       - build-base
       - busybox
       - git
-
 vars:
   gem: protocol-http1
-
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: b5baf225a90800dc6f46d7051cca7dfb82ed87e7a1ac9426b4386b776762963f
+      expected-sha256: 57bdc57192dda74582a3a463b6d0597337c6395ccaa2c601cb31f82837612081
       uri: https://github.com/socketry/protocol-http1/archive/refs/tags/v${{package.version}}.tar.gz
-
   - uses: patch
     with:
       patches: 001-remove-signing-key.patch
-
   - uses: ruby/build
     with:
       gem: ${{vars.gem}}
-
   - uses: ruby/install
     with:
       gem: ${{vars.gem}}
       version: ${{package.version}}
-
   - uses: ruby/clean
-
 update:
   enabled: true
   github:
