@@ -1,6 +1,6 @@
 package:
   name: wasmedge
-  version: 0.13.4
+  version: 0.13.5
   epoch: 0
   description: WasmEdge is a lightweight, high-performance, and extensible WebAssembly runtime for cloud native, edge, and decentralized applications.
   target-architecture:
@@ -13,7 +13,6 @@ package:
   dependencies:
     runtime:
       - libLLVM-15 # This isn't detected by melange for some reason.
-
 environment:
   contents:
     packages:
@@ -36,19 +35,16 @@ environment:
       - boost
       - boost-dev
       - rapidjson-dev
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/WasmEdge/WasmEdge
       tag: ${{package.version}}
-      expected-commit: 96ecb670f035ba193e0660118c24922092a6b00b
-
+      expected-commit: b8eb435507efb98fa8a799257795fcd9f8440975
   - uses: patch
     with:
       # The default cmake file doesn't find our build of llvm for some reason, this patch fixes it.
       patches: llvm-include.patch
-
   - runs: |
       CC=clang CXX=clang++ cmake -B build -G Ninja \
         -DCMAKE_INSTALL_PREFIX=/usr \
@@ -56,12 +52,10 @@ pipeline:
         -DCMAKE_BUILD_TYPE=Release -DWASMEDGE_BUILD_TESTS=ON -DCMAKE_CXX_FLAGS="-Wno-error=unused-parameter" -DLLVM_INCLUDE_DIRS="/usr/lib/llvm16/include"
       cmake --build build
       DESTDIR="${{targets.destdir}}" cmake --install build
-
 subpackages:
   - name: wasmedge-dev
     pipeline:
       - uses: split/dev
-
 update:
   enabled: true
   github:
