@@ -1,11 +1,10 @@
 package:
   name: uutils
-  version: 0.0.21
+  version: 0.0.22
   epoch: 0
   description: "Cross-platform Rust rewrite of the GNU coreutils."
   copyright:
     - license: MIT
-
 environment:
   contents:
     packages:
@@ -14,19 +13,16 @@ environment:
       - build-base
       - bash
       - rust
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/uutils/coreutils/archive/refs/tags/${{package.version}}.tar.gz
-      expected-sha256: a3295f7ec0600f379ec829649fcedc0432f493cbfc64ad10a1f9b6c52e874387
-
+      expected-sha256: 9f15977f15f8fb259d71f941cfa6b4bb7d9cb7d78e6384bcae19b107760d2a31
   - name: Configure and build
     runs: |
       cargo build --release --features unix
       mkdir -p ${{targets.destdir}}/usr
       make PREFIX=${{targets.destdir}}/usr MULTICALL=y install
-
 subpackages:
   - name: uutils-bash-completion
     description: bash completion for uutils
@@ -39,7 +35,6 @@ subpackages:
     dependencies:
       runtime:
         - uutils
-
   - name: uutils-zsh-completion
     description: zsh completion for uutils
     pipeline:
@@ -51,7 +46,6 @@ subpackages:
     dependencies:
       runtime:
         - uutils
-
   - name: uutils-fish-completion
     description: fish completion for uutils
     pipeline:
@@ -63,7 +57,6 @@ subpackages:
     dependencies:
       runtime:
         - uutils
-
 update:
   enabled: true
   github:
