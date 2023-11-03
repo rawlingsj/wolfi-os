@@ -1,6 +1,6 @@
 package:
   name: py3-traitlets
-  version: 5.10.0
+  version: 5.13.0
   epoch: 0
   description: Traitlets Python configuration system
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     runtime:
       - python3
-
 environment:
   contents:
     packages:
@@ -20,22 +19,17 @@ environment:
       - py3-setuptools
       - py3-build
       - py3-installer
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/ipython/traitlets
-      expected-commit: 2ce600fbe7e86511cc84f2f676ebb44a29914923
+      expected-commit: 008708a87d320e6e237ae370d60037889fd22e41
       tag: v${{package.version}}
-
   - name: Python Build
     runs: python -m build
-
   - name: Python Install
     runs: python -m installer -d "${{targets.destdir}}/" dist/traitlets*.whl
-
   - uses: strip
-
 update:
   enabled: true
   github:
