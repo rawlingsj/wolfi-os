@@ -1,6 +1,6 @@
 package:
   name: py3-psycopg
-  version: 3.1.10
+  version: 3.1.12
   epoch: 0
   description: PostgreSQL database adapter for Python
   copyright:
@@ -11,7 +11,6 @@ package:
       - py3-tzdata
       - python3
       - libpq-15
-
 environment:
   contents:
     packages:
@@ -24,14 +23,12 @@ environment:
       - py3-gpep517
       - python3
       - py3-setuptools
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/psycopg/psycopg
       tag: ${{package.version}}
-      expected-commit: 8d2ba2d7587116b65911cdccdf24af0413f17865
-
+      expected-commit: 5498bb85c62cbe71da16731e9f25e8727a098c80
   - name: Python Build
     runs: |
       cd psycopg
@@ -42,9 +39,7 @@ pipeline:
 
        python3 -m installer -d "${{targets.destdir}}" \
        dist/*.whl
-
   - uses: strip
-
 update:
   enabled: true
   ignore-regex-patterns:
