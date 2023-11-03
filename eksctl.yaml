@@ -1,6 +1,6 @@
 package:
   name: eksctl
-  version: 0.157.0
+  version: 0.164.0
   epoch: 0
   description:
   copyright:
@@ -8,28 +8,23 @@ package:
   dependencies:
     runtime:
       - ca-certificates-bundle
-
 environment:
   contents:
     packages:
       - busybox
       - ca-certificates-bundle
       - go
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/weaveworks/eksctl
-      expected-commit: 1aa40b00d0e6f3bba4e37a59bd4861042fe5d7dc
+      expected-commit: 3cdb1af9eaed027e9aa30081d8721d1ef4f629e9
       tag: v${{package.version}}
-
   - runs: |
       make binary
       mkdir -p ${{targets.destdir}}/usr/bin
       mv eksctl ${{targets.destdir}}/usr/bin/
-
   - uses: strip
-
 update:
   enabled: true
   github:
