@@ -1,6 +1,6 @@
 package:
   name: dependency-track
-  version: "4.8.2"
+  version: 4.9.1
   epoch: 0
   description:
   copyright:
@@ -9,7 +9,6 @@ package:
     runtime:
       - openjdk-17-jre
       - bash
-
 environment:
   contents:
     packages:
@@ -21,14 +20,12 @@ environment:
       - openjdk-17-default-jvm
       - wolfi-base
       - wolfi-baselayout
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/DependencyTrack/dependency-track
       tag: ${{package.version}}
-      expected-commit: f771e5f9b62a36ff738b90303963550c3c6d4684
-
+      expected-commit: 206a03c80534d4fa47472eac2b0d7ff291510d36
   - runs: |
       export LANG=en_US.UTF-8
       # Build the API Server and the bundled UI jars
@@ -42,7 +39,6 @@ pipeline:
 
       mv target/*jar ${{targets.destdir}}/usr/share/java/dependency-track
       mv src/main/docker/*.xml ${{targets.destdir}}/usr/share/java/dependency-track
-
 subpackages:
   - name: dependency-track-bundled
     description: Dependency track with bundled UI
@@ -53,7 +49,6 @@ subpackages:
 
           # Grab the same logging files
           cp ${{targets.destdir}}/usr/share/java/dependency-track/*.xml ${{targets.subpkgdir}}/usr/share/java/dependency-track/
-
 update:
   enabled: true
   github:
