@@ -1,6 +1,6 @@
 package:
   name: aws-cli
-  version: 1.27.165
+  version: 2.11.27
   epoch: 0
   description: "Universal Command Line Interface for Amazon Web Services"
   copyright:
@@ -17,7 +17,6 @@ package:
       - py3-s3transfer
       - py3-colorama
       - groff
-
 environment:
   contents:
     packages:
@@ -28,21 +27,16 @@ environment:
       - python3
       - python3-dev
       - py3-setuptools
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/aws/aws-cli/archive/${{package.version}}.tar.gz
-      expected-sha256: 7af88c427d70b17bdf521cf8f588e67fe422d9bfd86f880d3f2ca8038040af7e
-
+      expected-sha256: e41eb6fa080417ecbde0bc3e79f720be7a0feda0863296f762a2187008032307
   - runs: |
       python3 setup.py build
-
   - runs: |
       python3 setup.py install --prefix=/usr --root="${{targets.destdir}}"
-
   - uses: strip
-
 update:
   enabled: true
   github:
