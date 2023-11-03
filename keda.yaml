@@ -1,14 +1,13 @@
 package:
   name: keda
-  version: 2.11.2
-  epoch: 3
+  version: 2.12.0
+  epoch: 0
   description: KEDA is a Kubernetes-based Event Driven Autoscaling component. It provides event driven scale for any container running in Kubernetes
   copyright:
     - license: Apache-2.0
   dependencies:
     runtime:
       - tzdata
-
 environment:
   contents:
     packages:
@@ -18,21 +17,17 @@ environment:
       - build-base
       - protobuf-dev
       - protoc
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/kedacore/keda
       tag: v${{package.version}}
-      expected-commit: 517ed30cc311b0b81e39112cff0fa8e3251aed69
-
+      expected-commit: 9527a7f1f2797aa5662b2b45b1d26acf22a0cd09
   - runs: |
       ARCH=$(go env GOARCH) make build
       mkdir -p "${{targets.destdir}}/usr/bin"
       mv bin/keda "${{targets.destdir}}/usr/bin"
-
   - uses: strip
-
 subpackages:
   - name: "keda-adapter"
     dependencies:
@@ -44,7 +39,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}/usr/bin"
           mv bin/keda-adapter "${{targets.subpkgdir}}/usr/bin"
       - uses: strip
-
   - name: "keda-admission-webhooks"
     dependencies:
       runtime:
@@ -55,7 +49,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}/usr/bin"
           mv bin/keda-admission-webhooks "${{targets.subpkgdir}}/usr/bin"
       - uses: strip
-
   - name: "keda-compat"
     description: "Compatibility package to place binaries in the location expected by upstream helm charts"
     pipeline:
@@ -66,7 +59,6 @@ subpackages:
           ln -sf /usr/bin/keda-admission-webhooks ${{targets.subpkgdir}}/keda-admission-webhooks
           ln -sf /usr/bin/keda-adapter ${{targets.subpkgdir}}/keda-adapter
       - uses: strip
-
 update:
   enabled: true
   github:
