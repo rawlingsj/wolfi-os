@@ -1,11 +1,10 @@
 package:
   name: kubernetes-csi-external-resizer
-  version: 1.9.0
+  version: 1.9.1
   epoch: 0
   description: Sidecar container that watches Kubernetes PersistentVolumeClaims objects and triggers controller side expansion operation against a CSI endpoint
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -14,22 +13,18 @@ environment:
       - build-base
       - go
       - ca-certificates-bundle
-
 pipeline:
   # We can't use go/install because this requires specific ldflags to set the version
   - uses: git-checkout
     with:
       repository: https://github.com/kubernetes-csi/external-resizer
       tag: v${{package.version}}
-      expected-commit: 42ecc22863e4d53d1e91be9223cc5a97c3c65872
-
+      expected-commit: e4935338ddb81bd859b7ac93fc018e216a6e4743
   - runs: |
       make build
       mkdir -p ${{targets.destdir}}/usr/bin
       install -Dm755 ./bin/csi-resizer ${{targets.destdir}}/usr/bin/csi-resizer
-
   - uses: strip
-
 update:
   enabled: true
   github:
