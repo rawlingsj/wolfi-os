@@ -1,6 +1,6 @@
 package:
   name: ggshield
-  version: 1.18.1
+  version: 1.20.0
   epoch: 0
   description: Find and fix 360+ types of hardcoded secrets and 70+ types of infrastructure-as-code misconfigurations.
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     runtime:
       - python3
-
 environment:
   contents:
     packages:
@@ -20,22 +19,18 @@ environment:
       - py3-setuptools
       - py3-wheel
       - py3-pip
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/GitGuardian/ggshield
       tag: v${{package.version}}
-      expected-commit: 2f30902134b26ad443830b0b137895a968788d56
-
+      expected-commit: 73218f7601c5739b0986c4893b9b1882e1a039e5
   - runs: |
       pip3 install certifi -U  # https://github.com/advisories/GHSA-xqr8-7jwr-rhp7
       python3 setup.py bdist_wheel
       pip3 install . --prefix=/usr --root="${{targets.destdir}}"
       find ${{targets.destdir}} -name "*.pyc" -exec rm -rf '{}' +
-
   - uses: strip
-
 update:
   enabled: true
   github:
