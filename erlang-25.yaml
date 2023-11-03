@@ -1,6 +1,6 @@
 package:
   name: erlang-25
-  version: 25.3.2.6
+  version: 25.3.2.7
   epoch: 0
   description: General-purpose programming language and runtime environment
   copyright:
@@ -11,7 +11,6 @@ package:
       - ca-certificates-bundle
     provides:
       - erlang=25.3.2.2
-
 environment:
   contents:
     packages:
@@ -24,13 +23,11 @@ environment:
       - openssl-dev
       - ncurses-dev
       - zlib-dev
-
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: 14f519bb63f9cc8d1db62ef7c58abc56fa94f8f76d918d23acad374f38434088
+      expected-sha256: a8662859d153d3c4253c6a3a4d1538d0f32ce1cf02bb5484b17c9c176da37b37
       uri: https://github.com/erlang/otp/releases/download/OTP-${{package.version}}/otp_src_${{package.version}}.tar.gz
-
   - runs: |
       export CPPFLAGS="-D_BSD_SOURCE $CPPFLAGS"
 
@@ -46,13 +43,9 @@ pipeline:
         --enable-shared-zlib \
         --enable-ssl=dynamic-ssl-lib \
         --enable-jit
-
   - uses: autoconf/make
-
   - uses: autoconf/make-install
-
   - uses: strip
-
 subpackages:
   - name: "erlang-25-dev"
     description: "headers for erlang"
@@ -63,7 +56,6 @@ subpackages:
         - erlang
       provides:
         - erlang-dev=25.3.2.2
-
 update:
   enabled: true
   github:
