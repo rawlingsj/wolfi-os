@@ -1,11 +1,10 @@
 package:
   name: aws-c-common
-  version: 0.9.3
+  version: 0.9.6
   epoch: 0
   description: Core c99 package for AWS SDK for C including cross-platform primitives, configuration, data structures, and error handling
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -15,13 +14,11 @@ environment:
       - cmake
       - samurai
       - python3-dev
-
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: 389eaac7f64d7d5a91ca3decad6810429eb5a65bbba54798b9beffcb4d1d1ed6
+      expected-sha256: 5c30cc066a7f05fb8e4728f93aeed0e0e2698197a6df76237ac4e1200977d090
       uri: https://github.com/awslabs/aws-c-common/archive/refs/tags/v${{package.version}}.tar.gz
-
   - runs: |
       if [ "$CBUILD" != "$CHOST" ]; then
         CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
@@ -36,12 +33,9 @@ pipeline:
         -DBUILD_TESTING="$(want_check && echo ON || echo OFF)" \
         $CMAKE_CROSSOPTS
       cmake --build build
-
   - runs: |
       DESTDIR="${{targets.destdir}}" cmake --install build
-
   - uses: strip
-
 subpackages:
   - name: aws-c-common-dev
     pipeline:
@@ -53,7 +47,6 @@ subpackages:
       runtime:
         - aws-c-common
     description: aws-c-common dev
-
 update:
   enabled: true
   github:
