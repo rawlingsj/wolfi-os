@@ -1,6 +1,6 @@
 package:
   name: openjdk-17
-  version: 17.0.9.6
+  version: 17.0.10.1
   epoch: 0
   description:
   copyright:
@@ -8,7 +8,6 @@ package:
   dependencies:
     runtime:
       - openjdk-17-jre
-
 environment:
   contents:
     packages:
@@ -37,33 +36,27 @@ environment:
       - lcms2-dev
       - openjdk-16-default-jvm
       - openjdk-16
-
 # transform melange version to contain "+" rather than third "." so we can use a var in the fetch URL
 var-transforms:
   - from: ${{package.version}}
     match: \.(\d+)$
     replace: +$1
     to: mangled-package-version
-
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/openjdk/jdk17u/archive/refs/tags/jdk-${{vars.mangled-package-version}}.tar.gz
-      expected-sha512: 10062b85739e248a43111ff230b4e3de39154a4368946a78bc8e8188dd9b334bc6c0754e89fdfd54cc44e04aa4ef49b83ce674212bc316a7b8ab30e82559ba7a
-
+      expected-sha512: 914156038293f892146ec804573bea1d497f4c6e0702f99683db2f6df5a584eeec7c403eda8e0ca13171d84b75dcc024a0a020f886e26ff1399650680b914222
   - working-directory: /home/build/googletest
     pipeline:
       - uses: fetch
         with:
           uri: https://github.com/google/googletest/archive/release-1.8.1.tar.gz
           expected-sha512: e6283c667558e1fd6e49fa96e52af0e415a3c8037afe1d28b7ff1ec4c2ef8f49beb70a9327b7fc77eb4052a58c4ccad8b5260ec90e4bceeac7a46ff59c4369d7
-
   - uses: patch
     with:
       patches: FixNullPtrCast.patch
-
   - runs: chmod +x configure
-
   - uses: autoconf/configure
     with:
       opts: |
@@ -88,9 +81,7 @@ pipeline:
         --with-lcms=system \
         --with-gtest="/home/build/googletest" \
         --with-version-string="${{vars.mangled-package-version}}"
-
   - runs: make jdk-image
-
   # Check we built something valid
   - runs: |
       _java_bin="./build/*-server-release/images/jdk/bin"
@@ -101,14 +92,12 @@ pipeline:
       # NOTE: Disable flakey tests for now as we're seeing builds hang on aarch64
       # # run the gtest unittest suites
       # make test-hotspot-gtest
-
   - runs: |
       _java_home="usr/lib/jvm/java-17-openjdk"
 
       mkdir -p "${{targets.destdir}}"/$_java_home
       cp -r build/*-server-release/images/jdk/* "${{targets.destdir}}"/$_java_home
       rm "${{targets.destdir}}"/$_java_home/lib/src.zip
-
 subpackages:
   - name: "openjdk-17-dbg"
     description: "OpenJDK 17 Java Debug Symbols"
@@ -117,7 +106,6 @@ subpackages:
     dependencies:
       runtime:
         - openjdk-17
-
   - name: "openjdk-17-jre"
     description: "OpenJDK 17 Java Runtime Environment"
     dependencies:
@@ -138,7 +126,6 @@ subpackages:
               "${{targets.destdir}}"/$_java_home/lib/liblcms.so \
               "${{targets.destdir}}"/$_java_home/lib/libsplashscreen.so \
               "${{targets.subpkgdir}}"/$_java_home/lib
-
   - name: "openjdk-17-jre-base"
     description: "OpenJDK 17 Java Runtime Environment (headless)"
     dependencies:
@@ -177,7 +164,6 @@ subpackages:
 
           # symlink for `java-common` to work (which expects jre in $_java_home/jre)
           ln -sf . "${{targets.subpkgdir}}/$_java_home/jre"
-
   - name: "openjdk-17-jmods"
     description: "OpenJDK 17 jmods"
     pipeline:
@@ -185,7 +171,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}"/usr/lib/jvm/java-17-openjdk
           mv "${{targets.destdir}}"/usr/lib/jvm/java-17-openjdk/jmods \
              "${{targets.subpkgdir}}"/usr/lib/jvm/java-17-openjdk
-
   - name: "openjdk-17-doc"
     description: "OpenJDK 17 Documentation"
     pipeline:
@@ -193,7 +178,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}"/usr/lib/jvm/java-17-openjdk
           mv "${{targets.destdir}}"/usr/lib/jvm/java-17-openjdk/man \
              "${{targets.subpkgdir}}"/usr/lib/jvm/java-17-openjdk
-
   - name: "openjdk-17-demos"
     description: "OpenJDK 17 Demos"
     pipeline:
@@ -201,7 +185,6 @@ subpackages:
           mkdir -p "${{targets.subpkgdir}}"/usr/lib/jvm/java-17-openjdk
           mv "${{targets.destdir}}"/usr/lib/jvm/java-17-openjdk/demo \
              "${{targets.subpkgdir}}"/usr/lib/jvm/java-17-openjdk
-
   - name: "openjdk-17-default-jvm"
     description: "Use the openjdk-17 JVM as the default JVM"
     dependencies:
@@ -214,7 +197,6 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/lib/jvm
           ln -sf java-17-openjdk "${{targets.subpkgdir}}"/usr/lib/jvm/default-jvm
-
   - name: "openjdk-17-default-jdk"
     description: "Use the openjdk-17 JVM as the default JVM with the JDK installed"
     dependencies:
@@ -224,7 +206,6 @@ subpackages:
       provides:
         - default-jdk=1.17
         - default-jdk-lts=1.17
-
 update:
   enabled: true
   shared: true
