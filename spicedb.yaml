@@ -1,11 +1,10 @@
 package:
   name: spicedb
-  version: 1.25.0
-  epoch: 1
+  version: 1.26.0
+  epoch: 0
   description: Open Source, Google Zanzibar-inspired fine-grained permissions database
   copyright:
     - license: Apache-2.0
-
 environment:
   contents:
     packages:
@@ -13,22 +12,18 @@ environment:
       - busybox
       - ca-certificates-bundle
       - go
-
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/authzed/spicedb
       tag: v${{package.version}}
-      expected-commit: f6039f782ebcd253b156860cb639429d647d6fe7
-
+      expected-commit: 1296f82eb56e41721307d490aae18c80f46c8feb
   - uses: go/build
     with:
       packages: ./cmd/spicedb
       output: spicedb
       ldflags: -s -w
-
   - uses: strip
-
 update:
   enabled: true
   github:
