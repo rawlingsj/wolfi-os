@@ -97,11 +97,6 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Check sonames
-        if: steps.file_check.outputs.exists == 'true'
-        run: |
-          wolfictl check so-name
-
       - name: Check diff
         if: steps.file_check.outputs.exists == 'true'
         # Let's not fail the whole job if this step fails as it is for improved UX rather than an enforced check
@@ -137,6 +132,41 @@ jobs:
           name: packages-${{ matrix.arch }}
           retention-days: 1
           if-no-files-found: warn
+
+  abi-compatability:
+    name: "Check ABI Compatability"
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/wolfi-dev/sdk:latest@sha256:bb5769922852c5a389e7ef2dfaab1d07312dd2cbad66552df77dfefe4c1d022d
+    needs: build
+    if: needs.build.outputs.packages_were_built == 'true'
+
+    steps:
+      - name: 'Retrieve x86_64 packages'
+        uses: actions/download-artifact@v3
+        with:
+          name: packages-x86_64
+          path: /tmp/artifacts-1/
+
+      - name: 'Retrieve aarch64 packages'
+        uses: actions/download-artifact@v3
+        with:
+          name: packages-aarch64
+          path: /tmp/artifacts-2/
+
+      - name: 'Collect packages from all architectures into one place'
+        run: |
+          cd /tmp/artifacts-1
+
+          # Put the packages into one place
+          mv /tmp/artifacts-2/packages/* ./packages/
+
+          # Merge the build log ("packages.log") files
+          cat /tmp/artifacts-2/packages.log >> ./packages.log
+
+      - name: Check sonames
+        run: |
+          wolfictl check so-name
 
   scan:
     name: "Scan packages for CVEs"
