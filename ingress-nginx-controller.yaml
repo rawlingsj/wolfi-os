@@ -1,7 +1,7 @@
 #nolint:valid-pipeline-fetch-digest
 package:
   name: ingress-nginx-controller
-  version: 1.9.6
+  version: 1.10.0
   epoch: 1
   description: "Ingress-NGINX Controller for Kubernetes"
   copyright:
@@ -137,11 +137,7 @@ pipeline:
     with:
       repository: https://github.com/kubernetes/ingress-nginx
       tag: controller-v${{package.version}}
-      expected-commit: 7d6fa0badf074389b41857424ef2e580f104582b
-
-  - uses: go/bump
-    with:
-      deps: github.com/opencontainers/runc@v1.1.12
+      expected-commit: dc999d81da6d9258bf448874be5f1f0e2156ec94
 
   - name: Build ingress-nginx controller from source
     runs: |
