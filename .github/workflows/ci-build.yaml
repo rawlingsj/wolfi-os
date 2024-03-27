@@ -124,6 +124,7 @@ jobs:
         uses: ./.github/actions/docker-run
         with:
           opts: "-v /temp:/temp -v /var/run/docker.sock:/var/run/docker.sock"
+          # shell: bash
           run: |
             # Use a different shared $TMPDIR accessible and non-conflicting to
             # both the host and container since we're running docker out of
@@ -136,7 +137,9 @@ jobs:
 
             mkdir -p .melangecache
             for package in ${{needs.changes.outputs.packages}}; do
-              make MELANGE_EXTRA_OPTS="--out-dir=/tmp/ --create-build-log --cache-dir=.melangecache" REPO="./packages" package/\$package -j1 2>&1 | tee /tmp/${package}.log
+              echo "Building package $package"
+              # use a script so we can log to standard out and a file, plus keep the exit code for the package build
+              ./build_and_log.sh $package
               make MELANGE_EXTRA_OPTS="--runner docker" REPO="./packages" "test/\$package" -j1
             done
 
