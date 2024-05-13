@@ -23,7 +23,7 @@ pipeline:
       expected-sha256: 0fb790e394510e73fdba1492e576aaec0b8ee9ef08e3e821ce253a07719cf7ea
       strip-components: 1
 
-  - uses: autoconf/make-install
+  - uses: autoconf/make-install-b
 
 update:
   enabled: true
