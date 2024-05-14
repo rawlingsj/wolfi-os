@@ -41,6 +41,8 @@ pipeline:
   - runs: |
       .venv/bin/pip install --no-compile src/azure-cli/dist/*.whl src/azure-cli-core/dist/*.whl
 
+  - runs: echo 2
+
   - runs: |
       mkdir -p ${{targets.destdir}}/usr/share/az
       mv .venv ${{targets.destdir}}/usr/share/az/
