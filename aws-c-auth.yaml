@@ -47,6 +47,7 @@ pipeline:
   - runs: |
       DESTDIR="${{targets.destdir}}" cmake --install build
 
+  - runs: echo 1
   - uses: strip
 
 subpackages:
