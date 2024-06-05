@@ -22,8 +22,7 @@ jobs:
         arch: [ "x86_64", "aarch64" ]
       fail-fast: false
 
-    runs-on:
-      group: wolfi-os-builder-${{ matrix.arch }}
+    runs-on: ubuntu-latest
 
     permissions:
       contents: read
