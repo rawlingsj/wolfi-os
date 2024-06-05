@@ -24,6 +24,7 @@ pipeline:
       expected-sha256: c451b8abca000892ef82f9e23ab26b02369973f5ca76fdf2b8d8fa258debffef
 
   - runs: |
+      exit 1
       export JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
       sh build.sh -Ddist.dir=${{targets.destdir}}/usr/share/java/ant dist
 
