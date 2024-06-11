@@ -1,0 +1,11 @@
+issuer: https://accounts.google.com
+
+# staging-images: not in use
+# prod-images: bot-logs@prod-images-c6e5.iam.gserviceaccount.com
+subject: "116664437475512798657"
+
+permissions:
+  contents: read
+  actions: read
+  checks: read
+  pull_requests: read
