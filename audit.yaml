@@ -1,6 +1,6 @@
 package:
   name: audit
-  version: 4.0.1
+  version: 4.0.0
   epoch: 1
   description: User space tools for kernel auditing
   copyright:

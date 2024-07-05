@@ -1,6 +1,6 @@
 package:
   name: ed
-  version: 1.20.2
+  version: 1.20.1
   epoch: 0
   description: Line-oriented text editor used to create, display, modify and otherwise manipulate text files
   copyright:
