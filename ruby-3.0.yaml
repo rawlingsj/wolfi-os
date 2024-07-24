@@ -101,7 +101,7 @@ subpackages:
       - uses: split/dev
 
 update:
-  enabled: false
+  enabled: true
   manual: true
   exclude-reason: be careful with auto updates as we don't want to include 3.3, we currently don't offer a filter on release monitor versions
   release-monitor:
