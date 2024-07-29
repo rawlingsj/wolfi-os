@@ -1,6 +1,6 @@
 package:
   name: ruby-3.0
-  version: 3.0.7
+  version: 3.3.4
   epoch: 2
   description: "the Ruby programming language"
   copyright:
