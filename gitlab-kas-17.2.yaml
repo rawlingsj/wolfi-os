@@ -25,9 +25,8 @@ pipeline:
 update:
   enabled: true
   schedule:
-    daily: true
-  polling:
-    git: true
+    period: daily
+    reason: upstream uses tags
   git:
     tag-filter-prefix: v17.2
     strip-prefix: v

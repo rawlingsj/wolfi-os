@@ -32,8 +32,7 @@ pipeline:
 
 update:
   enabled: true
-  polling:
-    git: true
-    reason: upstream does not support tags or releases
+  git: {}
   schedule:
-    daily: true
+    period: daily
+    reason: upstream does not support tags or releases

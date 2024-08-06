@@ -42,8 +42,7 @@ vars:
 
 update:
   enabled: true
-  polling:
-    git: true
-    reason: upstream project uses a rolling release model with a branch
+  git: {}
   schedule:
-    daily: true
+    period: daily
+    reason: upstream project uses a rolling release model with a branch
