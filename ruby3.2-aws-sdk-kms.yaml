@@ -46,8 +46,7 @@ vars:
 
 update:
   enabled: true
-  polling:
-    git: true
-    reason: upstream does not maintain tags or releases, it uses a branch
+  git: {}
   schedule:
     daily: true
+    reason: upstream does not maintain tags or releases, it uses a branch
