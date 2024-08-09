@@ -42,7 +42,7 @@ vars:
 
 update:
   enabled: true
-  git: {}
+  # git: {}
   schedule:
     period: daily
     reason: upstream project uses a rolling release model with a branch
