@@ -46,4 +46,4 @@ vars:
 
 update:
   enabled: true
-  git: {}
+  #git: {}
