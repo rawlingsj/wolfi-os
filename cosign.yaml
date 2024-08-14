@@ -21,7 +21,7 @@ environment:
 pipeline:
   - uses: git-checkout
     with:
-      expected-commit: b5e7dc123a272080f4af4554054797296271e902
+      expected-commit: foo
       repository: https://github.com/sigstore/cosign
       tag: v${{package.version}}
 
