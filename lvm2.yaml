@@ -112,5 +112,6 @@ subpackages:
 
 update:
   enabled: true
-  release-monitor:
-    identifier: 5354
+  git:
+    strip-prefix: v
+    tag-filter-prefix: v
