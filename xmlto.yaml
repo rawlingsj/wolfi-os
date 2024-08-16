@@ -49,5 +49,4 @@ subpackages:
 
 update:
   enabled: true
-  release-monitor:
-    identifier: 13307
+  git: {}
