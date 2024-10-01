@@ -38,7 +38,7 @@ jobs:
               - ./*/*/*.melange.yaml # Support recursive melange files with the new naming convention.
 
       # this need to point to main to always get the latest action
-      - uses: wolfi-dev/actions/install-wolfictl@main # main
+      # - uses: wolfi-dev/actions/install-wolfictl@main # main
 
       # Assuming that we have a list of changed files such as `foo.yaml` and `bar.yaml`, this
       # strips the list down into `foo` and `bar`.
