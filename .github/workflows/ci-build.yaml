@@ -72,11 +72,11 @@ jobs:
         arch: ["x86_64", "aarch64"]
         include:
           - arch: x86_64
-            runner: ubuntu-latest-16-cores
+            runner: ubuntu-latest
             oci: amd64
-          - arch: aarch64
-            runner: ubuntu-arm-16-cores
-            oci: arm64
+          # - arch: aarch64
+          #   runner: ubuntu-arm-16-cores
+          #   oci: arm64
       fail-fast: false
     runs-on: ${{ matrix.runner }}
     needs: changes
