@@ -1,0 +1,158 @@
+package:
+  name: git
+  version: 2.46.2
+  epoch: 0
+  description: "distributed version control system"
+  copyright:
+    - license: GPL-2.0-or-later
+  dependencies:
+    provider-priority: 10
+
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - curl-dev
+      - expat-dev
+      - openssf-compiler-options
+      - openssl-dev
+      - pcre2-dev
+      - wolfi-base
+      - zlib-dev
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://www.kernel.org/pub/software/scm/git/git-${{package.version}}.tar.xz
+      expected-sha256: 5ee8a1c68536094a4f7f9515edc154b12a275b8a57dda4c21ecfbf1afbae2ca3
+
+  - uses: fetch
+    working-directory: /home/build/git-manpages
+    with:
+      uri: https://www.kernel.org/pub/software/scm/git/git-manpages-${{package.version}}.tar.xz
+      expected-sha256: fe995b99b0b622fd4f414c40a02ede3875cddd5816e2632ec1808bae5c94c2ae
+
+  - runs: |
+      cat >> config.mak <<-EOF
+      NO_GETTEXT=YesPlease
+      NO_SVN_TESTS=YesPlease
+      NO_REGEX=YesPlease
+      NO_SYS_POLL_H=1
+      ICONV_OMITS_BOM=Yes
+      INSTALL_SYMLINKS=1
+      USE_LIBPCRE2=YesPlease
+      NO_PERL=YesPlease
+      NO_TCLTK=YesPlease
+      EOF
+
+  - runs: |
+      make prefix=/usr \
+        DESTDIR="${{targets.destdir}}" \
+        INSTALLDIRS=vendor \
+        install -j$(nproc)
+
+  - runs: |
+      mkdir -p "${{targets.destdir}}"/var/git
+
+  - uses: strip
+
+subpackages:
+  - name: "git-daemon"
+    description: "Git protocol daemon"
+    pipeline:
+      - runs: |
+          mkdir -p "${{targets.subpkgdir}}"/usr/libexec/git-core
+
+          for i in git-daemon git-http-backend git-shell; do
+            mv "${{targets.destdir}}"/usr/libexec/git-core/$i "${{targets.subpkgdir}}"/usr/libexec/git-core/
+          done
+
+          mkdir -p "${{targets.subpkgdir}}"/usr/bin
+          mv "${{targets.destdir}}"/usr/bin/git-shell "${{targets.subpkgdir}}"/usr/bin/
+
+  - name: "git-email"
+    description: "Git tools for email"
+    pipeline:
+      - runs: |
+          mkdir -p "${{targets.subpkgdir}}"/usr/libexec/git-core
+
+          for i in git-send-email git-imap-send; do
+            mv "${{targets.destdir}}"/usr/libexec/git-core/$i "${{targets.subpkgdir}}"/usr/libexec/git-core/
+          done
+
+  - name: "git-p4"
+    description: "Git tools for working with Perforce depots"
+    dependencies:
+      runtime:
+        - git-daemon
+    pipeline:
+      - runs: |-
+          mkdir -p "${{targets.subpkgdir}}"/usr/libexec/git-core/mergetools
+
+          mv  "${{targets.destdir}}"/usr/libexec/git-core/*p4* "${{targets.subpkgdir}}"/usr/libexec/git-core/
+          mv  "${{targets.destdir}}"/usr/libexec/git-core/mergetools/*p4* \
+            "${{targets.subpkgdir}}"/usr/libexec/git-core/mergetools/
+
+  - name: "git-completion"
+    description: "Shell completion for git commands"
+    dependencies:
+      runtime:
+        - git
+    pipeline:
+      - runs: |-
+          mkdir -p "${{targets.contextdir}}"/usr/local/etc/profile.d/
+          mv contrib/completion/* "${{targets.contextdir}}"/usr/local/etc/profile.d/
+    test:
+      environment:
+        contents:
+          packages:
+            - wolfi-base
+      pipeline:
+        - runs: ls /usr/local/etc/profile.d/*.bash
+
+  - name: "git-doc"
+    description: "git manpages"
+    pipeline:
+      - working-directory: /home/build/git-manpages
+        runs: |
+          mkdir -p "${{targets.contextdir}}"/usr/share/man
+          mv man1 man5 man7 "${{targets.contextdir}}"/usr/share/man
+
+update:
+  enabled: true
+  release-monitor:
+    identifier: 5350
+
+test:
+  environment:
+    environment:
+      HOME: /tmp
+  pipeline:
+    - uses: test/hardening-check
+    - name: Verify git installation
+      runs: |
+        git --version || exit 1
+    - name: Basic git operations
+      runs: |
+        git config --global user.name "Wolfi"
+        git config --global user.email "wolf@wolfi.dev"
+        mkdir test_repo && cd test_repo
+        git init
+        touch README.md
+        git add README.md
+        git commit -m "Initial commit"
+        git status | grep 'nothing to commit, working tree clean' || exit 1
+    - name: Clone repository
+      runs: |
+        git clone --depth 1 https://github.com/wolfi-dev/os.git test_clone
+        [ -d "test_clone/.git" ] || exit 1
+    - name: Fetch repository updates
+      runs: |
+        cd test_clone
+        git fetch || exit 1
+    - name: Check git configuration
+      runs: |
+        git config --list | grep 'user.name=Wolfi' || exit 1
+        git config --list | grep 'user.email=wolf@wolfi.dev' || exit 1
