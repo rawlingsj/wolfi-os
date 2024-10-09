@@ -61,7 +61,7 @@ jobs:
           #     [ "${base_file}" = "$pkg" ] && printf "%s " ${base_file} >> $GITHUB_OUTPUT
           #   done
           # done < packages-list
-          printf "libmamba" >> $GITHUB_OUTPUT
+          printf "apache-arrow" >> $GITHUB_OUTPUT
 
           printf "\n" >> $GITHUB_OUTPUT
 
