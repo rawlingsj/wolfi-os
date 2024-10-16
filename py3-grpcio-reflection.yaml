@@ -1,7 +1,7 @@
 # Generated from https://pypi.org/project/grpcio-reflection/
 package:
   name: py3-grpcio-reflection
-  version: 1.65.1
+  version: 1.67.0
   epoch: 0
   description: Standard Protobuf Reflection Service for gRPC
   copyright:
@@ -24,7 +24,7 @@ environment:
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: e6ae5900f9d801dc970298255042fbc42681546f74e08c2336dffd06b9765abf
+      expected-sha256: c47143738b1897b6ce4af5e0e338c85c9aee5fdcbb3355d368a8dcae46d8933c
       uri: https://files.pythonhosted.org/packages/source/g/grpcio-reflection/grpcio_reflection-${{package.version}}.tar.gz
 
   - name: Python Build
